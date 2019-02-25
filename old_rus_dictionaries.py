@@ -3,7 +3,6 @@ import json
 
 with open('data.json', 'r', encoding='utf-8') as f:
     js = json.loads(f.read())
-    f.close()
 
 app = Flask(__name__)
 
