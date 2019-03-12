@@ -20,14 +20,25 @@ def search():
 
 @app.route('/res/<query>')
 def search_result(query):
+    query = query.upper()
+    
+    mapping1 = {a: а, b: б}
+    mapping2 = {a: б, b: в}
+    query1 = ''
+    for letter in query:
+        query1 += mapping1[letter]
+    query2 = ''
+    for letter in query:
+        query2 += mapping2[letter]
+    
     try:
-        query = query.upper()
-        res = js[query]['data_XI–XVII']
-        # word = res[lexeme_XI–XVII]
-        # descr = res[Full]
+        res = js[query1]['data_XI–XVII']
         return render_template('res.html', result=res)
     except KeyError:
-        return render_template('error.html', comment='There is no such entry')
+        try:
+            res = js[query2]['data_XI–XVII']
+        except KeyError:
+            return render_template('error.html', comment='There is no such entry')
 
 
 if __name__ == '__main__':
