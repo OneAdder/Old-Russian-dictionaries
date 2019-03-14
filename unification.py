@@ -8,9 +8,10 @@ set3 = 'i' + iotated
 set4 = 'цкнгшщзхфвпрлджчсмтб'
 
 def strip_stuff(text):
-    """Приводит в нижний регистр и убирает '|'."""
+    """Приводит в нижний регистр и убирает '|' и прочее."""
     text = text.lower()
     text = text.replace('|', '')
+    text = re.sub(' \(-.*?\)', '', text)
     return text
 
 def unify_various_symbols(text):
@@ -96,6 +97,8 @@ def unify_iotated(text):
         'ѭ': 'ѫ',
         'ꙓ': 'ѣ'
     }
+    if not text:
+        return ''
     if text[0] in mapping:
         text[0] = mapping[text[0]]
     matches = re.findall('([' + set2 + '][' + ''.join(mapping.keys()) + '])', text)
@@ -161,7 +164,7 @@ def unify(text):
     text = unify_iotated(text)
     text = unify_i_and_front_shwa(text)
     text = unify_r_and_l_with_vowels(text)
-    text = drop_shwas(text)
+    #text = drop_shwas(text)
     return text
 
 def test():
