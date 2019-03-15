@@ -143,19 +143,27 @@ def unify_r_and_l_with_vowels(text):
     return text
 
 def drop_shwas(text):
-    matches = re.findall('([' + set4 + '][ь][' + set4 + '])', text)
-    for match in matches:
-        key = text.find(match)
-        text = list(text)
-        text[key + 1] = 'є'
-        text = ''.join(text)
-    matches = re.findall('([' + set4 + '][ъ][' + set4 + '](?:^[иѧ]\b))', text)
-    for match in matches:
-        key = text.find(match)
-        text = list(text)
-        text[key + 1] = 'о'
-        text = ''.join(text)
-    return text
+    """Положить редуцированные."""
+    text = list(text)
+    i = len(text) - 1
+    drop_next = True
+    while i >= 0:
+        if text[i] in 'ъь':
+            if drop_next:
+                text.pop(i)
+                drop_next = False
+            else:
+                if text[i] == 'ь':
+                    text[i] = 'є'
+                else:
+                    text[i] = 'о'
+                drop_next = True
+        else:
+            drop = True
+        i -= 1
+    return ''.join(text)
+
+#print(drop_shwas('пъпъпыпьпъпъпъпьпьпапъ'))
 
 def unify(text):
     text = strip_stuff(text)
