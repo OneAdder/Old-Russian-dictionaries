@@ -4,14 +4,11 @@ import itertools
 import random
 
 from multiprocessing import Pool
+import os
 
 from unification import unify
 
-#a = {'a': 'b'}
-#b = {'c': 'd'}
-#c = {'e': 'f'}
-#d = {'g': 'h'}
-#print({**a, **b, **c, **d})
+CPU_CORES = 4
 
 with open('avanesov2.json', 'r', encoding='utf-8') as f:
     avanesov = json.loads(f.read())
@@ -41,13 +38,11 @@ avanesov1, avanesov3 = splitDict(avanesov)
 avanesov1, avanesov2 = splitDict(avanesov1)
 avanesov3, avanesov4 = splitDict(avanesov3)
 
-bingos = 0
 
 def match_(avanesov):
     global x11
-    global bingos
     #Два аргумента сложно передавать, поэтому такой колхоз
-    number = random.randint(0, 20)
+    number = os.getpid()
     r = 0
     pool_length = len(avanesov)
     for avanesov_lemma in avanesov:
@@ -57,28 +52,15 @@ def match_(avanesov):
                 ready = 100 - (((pool_length - r) * 100)/pool_length)
                 print(str(number) + ': ' + str(ready))
                 print(x11_unified)
-                i = x11.index(x11_lemma)
-                x11.pop(i)
                 avanesov[avanesov_lemma]['XVII_lemma'] = x11_lemma
-                avanesov[avanesov_lemma]['bingo'] = True
-                bingos += 1
-            else:
-                avanesov[avanesov_lemma]['bingo'] = False
         r += 1
     return avanesov
 
-pool = Pool(processes=4)
+pool = Pool(processes=CPU_CORES)
 matched1, matched2, matched3, matched4 = pool.map(match_, (avanesov1, avanesov2, avanesov3, avanesov4))
 matched = {**matched1, **matched2, **matched3, **matched4}
 
-print('!bingos!')
-print(bingos)
-print('!bingos!')
-
-for x11_lemma in x11:
-    matched[avanesov_lemma]['XVII_lemma'] = x11_lemma
-    matched[avanesov_lemma]['bingo'] = False
-
-with open('matched.json', 'w') as f:
+with open('prematched.json', 'w') as f:
     json.dump(matched, f, indent=4, ensure_ascii=False)
+
 
