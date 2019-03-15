@@ -159,7 +159,7 @@ def drop_shwas(text):
                     text[i] = 'о'
                 drop_next = True
         elif text[i] in set2:
-            drop = True
+            drop_next = True
         i -= 1
     return ''.join(text)
 
