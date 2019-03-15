@@ -11,7 +11,8 @@ def strip_stuff(text):
     """Приводит в нижний регистр и убирает '|' и прочее."""
     text = text.lower()
     text = text.replace('|', '')
-    text = re.sub(' \(-.*?\)', '', text)
+    text = re.sub(' .*', '', text)
+    text = text.replace('.', '')
     return text
 
 def unify_various_symbols(text):
