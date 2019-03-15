@@ -1,10 +1,17 @@
 import json
 import pandas
 import itertools
+import random
 
 from multiprocessing import Pool
 
 from unification import unify
+
+#a = {'a': 'b'}
+#b = {'c': 'd'}
+#c = {'e': 'f'}
+#d = {'g': 'h'}
+#print({**a, **b, **c, **d})
 
 with open('avanesov2.json', 'r', encoding='utf-8') as f:
     avanesov = json.loads(f.read())
@@ -27,24 +34,28 @@ def splitDict(d):
     d2 = dict(i)
     return d1, d2
 
-avanesov1, avanesov2 = splitDict(avanesov)
+avanesov1, avanesov3 = splitDict(avanesov)
 #print(len(avanesov1))
 #print(len(avanesov2))
 
-r = 0
+avanesov1, avanesov2 = splitDict(avanesov1)
+avanesov3, avanesov4 = splitDict(avanesov3)
+
 bingos = 0
 
 def match_(avanesov):
     global x11
-    global r
     global bingos
+    #Два аргумента сложно передавать, поэтому такой колхоз
+    number = random.randint(0, 20)
+    r = 0
+    pool_length = len(avanesov)
     for avanesov_lemma in avanesov:
         for x11_lemma in x11:
             x11_unified = unify(x11_lemma)
             if x11_unified == avanesov_lemma:
-                print()
-                print('Ready:')
-                print(100 - (((lengt - r) * 100)/lengt))
+                ready = 100 - (((pool_length - r) * 100)/pool_length)
+                print(str(number) + ': ' + str(ready))
                 print(x11_unified)
                 i = x11.index(x11_lemma)
                 x11.pop(i)
@@ -56,10 +67,9 @@ def match_(avanesov):
         r += 1
     return avanesov
 
-pool = Pool(processes=2)
-matched1 = pool.map(match_, (avanesov1,))
-matched2 = pool.map(match_, (avanesov2,))
-matched = {**matched1, **matched2}
+pool = Pool(processes=4)
+matched1, matched2, matched3, matched4 = pool.map(match_, (avanesov1, avanesov2, avanesov3, avanesov4))
+matched = {**matched1, **matched2, **matched3, **matched4}
 
 print('!bingos!')
 print(bingos)
