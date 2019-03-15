@@ -122,17 +122,33 @@ def unify_i_and_front_shwa(text):
 
 def unify_r_and_l_with_vowels(text):
     """Превращаются сочетания:
-    'согласный + р/л + ь/ъ + согласный' в 'согласный + ь/ъ + р/л + согласный'
+    'согласный + р/л + ь/ъ + согласный' в 'согласный + є/о + р/л + согласный'
+    'согласный + ь/ъ + р/л + согласный' в 'согласный + є/о + р/л + согласный'
     'согласный + р/л + ѣ + согласный' в 'согласный + р/л + є + согласный'
     """
-    matches = re.findall('((?:[' + set4 + '])(?:[ьъ])(?:[рл])(?:[' + set4 + ']))', text)
+    matches = re.findall('([' + set4 + '][рл][ьъ][' + set4 + '])', text)
     for match in matches:
         key = text.find(match)
         v = text[key + 2]
         r = text[key + 1]
         text = list(text)
-        text[key + 1] = r
-        text[key + 2] = v
+        if v == 'ь':
+            text[key + 1] = 'є'
+        else:
+            text[key + 1] = 'о'
+        text[key + 2] = r
+        text = ''.join(text)
+    matches = re.findall('([' + set4 + '][ьъ][рл][' + set4 + '])', text)
+    for match in matches:
+        key = text.find(match)
+        r = text[key + 2]
+        v = text[key + 1]
+        text = list(text)
+        if v == 'ь':
+            text[key + 1] = 'є'
+        else:
+            text[key + 1] = 'о'
+        text[key + 2] = r
         text = ''.join(text)
     matches = re.findall('([' + set4 + '][рл]ѣ[' + set4 + '])', text)
     for match in matches:
@@ -163,6 +179,24 @@ def drop_shwas(text):
         i -= 1
     return ''.join(text)
 
+
+def add_shwas(text):
+    """Добавим редуцированные."""
+    new_text = ''
+    for i, sym in enumerate(text):
+        if sym == text[-1]:
+            if sym in set4:
+                new_text += sym + 'ъ'
+            else:
+                new_text += sym
+        else:
+            if sym in set4 and text[i + 1] in set4:
+                new_text += sym + 'ъ'
+            else:
+                new_text += sym
+    return new_text
+        
+
 #print(drop_shwas('пъпъпыпьпъпъпъпьпьпапъ'))
 
 def unify(text):
@@ -173,11 +207,12 @@ def unify(text):
     text = unify_iotated(text)
     text = unify_i_and_front_shwa(text)
     text = unify_r_and_l_with_vowels(text)
-    #text = drop_shwas(text)
+    text = drop_shwas(text)
+    text = add_shwas(text)
     return text
 
 def test():
-    words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ', 'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси')
+    words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ', 'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь')
     for word in words:
         print(unify(word))
 #test()
