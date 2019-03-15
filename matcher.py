@@ -2,6 +2,8 @@ import json
 import pandas
 import itertools
 import random
+import pyximport; pyximport.install()
+import match_cython
 
 from multiprocessing import Pool
 import os
@@ -12,11 +14,6 @@ CPU_CORES = 4
 
 with open('avanesov2.json', 'r', encoding='utf-8') as f:
     avanesov = json.loads(f.read())
-
-shit = pandas.read_csv('wordlist_linked.csv', delimiter=',', header=0)
-
-x11 = list(shit.MainLemma)
-#print(x11[0:20])
 
 lengt = len(avanesov)
 print('Total:')
@@ -32,29 +29,11 @@ def splitDict(d):
     return d1, d2
 
 avanesov1, avanesov3 = splitDict(avanesov)
-#print(len(avanesov1))
-#print(len(avanesov2))
 
 avanesov1, avanesov2 = splitDict(avanesov1)
 avanesov3, avanesov4 = splitDict(avanesov3)
 
-
-def match_(avanesov):
-    global x11
-    #Два аргумента сложно передавать, поэтому такой колхоз
-    number = os.getpid()
-    r = 0
-    pool_length = len(avanesov)
-    for avanesov_lemma in avanesov:
-        for x11_lemma in x11:
-            x11_unified = unify(x11_lemma)
-            if x11_unified == avanesov_lemma:
-                ready = 100 - (((pool_length - r) * 100)/pool_length)
-                print(str(number) + ': ' + str(ready))
-                print(x11_unified)
-                avanesov[avanesov_lemma]['XVII_lemma'] = x11_lemma
-        r += 1
-    return avanesov
+match_ = match_cython.match_
 
 pool = Pool(processes=CPU_CORES)
 matched1, matched2, matched3, matched4 = pool.map(match_, (avanesov1, avanesov2, avanesov3, avanesov4))
