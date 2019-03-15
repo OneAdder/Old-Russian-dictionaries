@@ -122,7 +122,7 @@ def unify_i_and_front_shwa(text):
 
 def unify_r_and_l_with_vowels(text):
     """Превращаются сочетания:
-    'согласный + ь/ъ + р/л + согласный' в 'согласный + р/л + ь/ъ + согласный'
+    'согласный + р/л + ь/ъ + согласный' в 'согласный + ь/ъ + р/л + согласный'
     'согласный + р/л + ѣ + согласный' в 'согласный + р/л + є + согласный'
     """
     matches = re.findall('((?:[' + set4 + '])(?:[ьъ])(?:[рл])(?:[' + set4 + ']))', text)
@@ -131,8 +131,8 @@ def unify_r_and_l_with_vowels(text):
         v = text[key + 2]
         r = text[key + 1]
         text = list(text)
-        text[key + 1] = v
-        text[key + 2] = r
+        text[key + 1] = r
+        text[key + 2] = v
         text = ''.join(text)
     matches = re.findall('([' + set4 + '][рл]ѣ[' + set4 + '])', text)
     for match in matches:
