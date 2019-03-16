@@ -10,12 +10,12 @@
 
 
 
-Для запуска обработки словарей следут запустить Башем скрипт `./data_processing/match.sh` (пользователи Windows могут запустить скрипты по порядку: `./data_processing/tei_parser.py`, `./data_processing/matcher.py` и `./data_processing/finish_match.py`). Результаты выведутся в файл `./data_processing/matched.json`.
+Для запуска обработки словарей следут запустить Башем скрипт `data_processing/match.sh` (пользователи Windows могут запустить Питоном скрипты по порядку: `data_processing/tei_parser.py`, `data_processing/matcher.py` и `data_processing/finish_match.py`). Результаты выведутся в файл `data_processing/matched.json`.
 
 Зависимости: `cython3`, `pandas`, `bs4`.
 
 # Устройство данных
-Устройство JSON-файла `./data_processing/matched.json`
+Устройство JSON-файла `data_processing/matched.json`
 
 
 ```
