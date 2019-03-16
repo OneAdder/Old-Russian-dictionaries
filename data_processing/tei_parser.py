@@ -1,3 +1,4 @@
+"""Парсит словарь в виде TEI и сохраняет в avanesov2.json"""
 from bs4 import BeautifulSoup
 import json
 import pyximport; pyximport.install()
@@ -12,10 +13,12 @@ soup = BeautifulSoup(xml, 'xml')
 
 
 def get_avanesov_entries():
+    """Берём все статьи."""
     entries = soup.find_all('superEntry')
     return entries
 
 def convert_tei_to_json(entries):
+    """Не используется."""
     js = []
     for entry in entries:
         document = {}
@@ -65,6 +68,29 @@ def convert_tei_to_json(entries):
     return js
 
 def convert_tei_to_another_json(entries):
+    """Создаёт JSON со словарём Аванесова вида:
+    {
+        унифицированная_лемма (str):
+        {
+            "avanesov_lemma": лемма (str),
+            "avanesov_data": {
+                "gramGrp": граматический_клас (str),
+                "definition": определение (str),
+                "usg": использование (str),
+                "inflected": изменяемый/неизменяемый (bool),
+                "examples": [
+                    {
+                        "example": пример (str),
+                        "src": источник (str)
+                    },
+                    ...
+                ],
+            "inflection": {формы (dict)}
+            }
+        },
+        ...
+    }
+    """
     js = {}
     for entry in entries:
         document = {}
@@ -114,6 +140,7 @@ def convert_tei_to_another_json(entries):
         
 
 def save(js):
+    """Сохраняет JSON как avanesov2.json"""
     with open('avanesov2.json', 'w', encoding='utf-8') as f:
         json.dump(js, f, indent=4, ensure_ascii=False)
 

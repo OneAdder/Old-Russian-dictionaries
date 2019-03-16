@@ -1,3 +1,5 @@
+"""См. докстринги в matcher.py. Этот модуль -- аналогичный скрипт, только для восьмипоточных CPU."""
+
 import json
 import pandas
 import itertools
