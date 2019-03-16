@@ -255,7 +255,7 @@ def drop_shwas(text):
                     text[i] = 'о'
                 drop_next = True
         elif text[i] in set2:
-            drop_next = Trueunify_r_and_l_with_shwas1
+            drop_next = True
         i -= 1
     return ''.join(text)
 
