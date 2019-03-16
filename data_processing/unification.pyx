@@ -210,7 +210,7 @@ def unify_r_and_l_with_shwas2(text):
             i += 1
         else:
             if text[i] in set4 and text[i+1] in 'ъь' and text[i+2] in 'рл' and text[i+3] in set4:
-                if text[i+1] == 'ь':Алё
+                if text[i+1] == 'ь':
                     new_text += text[i] + 'є' + text[i+2] + text[i+3]
                 else:
                     new_text += text[i] + 'о' + text[i+2] + text[i+3]
