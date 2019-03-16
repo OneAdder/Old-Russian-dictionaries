@@ -3,9 +3,6 @@
 __author__ = "Michael Voronov, Anna Sorokina"
 __license__ = "GPLv3"
 
-import re
-
-
 iotated = 'юиѭѩѥꙓꙑ'
 set1 = {'ш', 'щ', 'ж', 'ч', 'ц'}
 set2 = 'аоєѹiѧѫѣъьѵѷ' + iotated
@@ -15,15 +12,23 @@ set4 = 'цкнгшщзхфвпрлджчсмтб'
 def strip_stuff(text):
     """Приводит в нижний регистр и убирает '|' и прочее."""
     text = text.lower()
-    text = text.replace('|', '')
-    text = re.sub(' .*', '', text)
-    text = text.replace('.', '')
-    return text
+    new_text = ''
+    cdef int i = 0
+    cdef int l = len(text)
+    while i < l:
+        if text[i] == ('|'):
+            i += 1
+        elif text[i] == '.':
+            i += 1
+        elif text[i] == ' ':
+            break
+        else:
+            new_text += text[i]
+            i += 1
+    return new_text
 
 def unify_various_symbols(text):
     """Унифицирует разные варианты."""
-    text = text.replace('оу', 'ѹ')
-    text = re.sub('(ъi|ъї)', 'ꙑ', text)
     mapping = {
         'е': 'є',
         'э': 'є',
@@ -51,8 +56,30 @@ def unify_various_symbols(text):
         'ѽ': 'о',
         '҃': ''
     }
-    text = ''.join([mapping[sym] if sym in mapping else sym for sym in text])
-    return text
+    new_text = ''
+    cdef int i = 0
+    cdef int l = len(text)
+    while i < l:
+        if i + 1 == l:
+            if text[i] in mapping:
+                new_text += mapping[text[i]]
+            else:
+                new_text += text[i]
+            i += 1
+        else:
+            if text[i] == 'о' and text[i+1] == 'у':
+                new_text += 'ѹ'
+                i += 2
+            elif text[i] == 'ъ' and (text[i+1] == 'i' or text[i+1] == 'ї'):
+                new_text += 'ꙑ'
+                i += 2
+            elif text[i] in mapping:
+                new_text += mapping[text[i]]
+                i += 1
+            else:
+                new_text += text[i]
+                i += 1
+    return new_text
 
 def unify_final_shwa(text):
     """Приводит 'ъ' и 'ь' в конце к 'ъ'"""
@@ -61,7 +88,7 @@ def unify_final_shwa(text):
     return text
 
 def unify_vowels_after_set1(text):
-    """Переводит йотированные после 'ш', 'щ', 'ж', 'ч', 'ц' в не-йотированные."""
+    """Переводит йотированные после 'ш', 'щ', 'ж', 'жд', 'ч', 'ц' в не-йотированные."""
     mapping = {
         'а': 'ѧ',
         'ѩ': 'ѧ',
@@ -80,6 +107,17 @@ def unify_vowels_after_set1(text):
             if text[i] in set1 and text[i+1] in mapping:
                 new_text += text[i] + mapping[text[i+1]]
                 i += 2
+            elif text[i] == 'ж' and text[i+1] == 'д':
+                if i + 2 == l:
+                    new_text += text[i]
+                    i += 1
+                else:
+                    if text[i + 2] in mapping:
+                        new_text += text[i] + text[i+1] + mapping[text[i+2]]
+                        i += 3
+                    else:
+                        new_text += text[i]
+                        i += 1
             else:
                 new_text += text[i]
                 i += 1
@@ -129,40 +167,51 @@ def unify_i_and_front_shwa(text):
 
 def unify_r_and_l_with_shwas1(text):
     """Превращается сочетание 'согласный + р/л + ь/ъ + согласный' в 'согласный + є/о + р/л + согласный'"""
-    matches = re.findall('([' + set4 + '][рл][ьъ][' + set4 + '])', text)
-    cdef int key
-    for match in matches:
-        key = text.find(match)
-        v = text[key + 2]
-        r = text[key + 1]
-        text = list(text)
-        if v == 'ь':
-            text[key + 1] = 'є'
+    new_text = ''
+    cdef int i = 0
+    cdef int l = len(text)
+    while i < l:
+        if i + 3 >= l:
+            new_text += text[i]
+            i += 1
         else:
-            text[key + 1] = 'о'
-        text[key + 2] = r
-        text = ''.join(text)
-    return text
+            if text[i] in set4 and text[i+1] in 'рл' and text[i+2] in 'ъь' and text[i+3] in set4:
+                if text[i+2] == 'ь':
+                    new_text += text[i] + 'є' + text[i+1] + text[i+3]
+                else:
+                    new_text += text[i] + 'о' + text[i+1] + text[i+3]
+                i += 4
+            else:
+                new_text += text[i]
+                i += 1
+    return new_text
+
+
 
 def unify_r_and_l_with_shwas2(text):
     """Превращается сочетание 'согласный + ь/ъ + р/л + согласный' в 'согласный + є/о + р/л + согласный'"""
-    matches = re.findall('([' + set4 + '][ьъ][рл][' + set4 + '])', text)
-    cdef int key
-    for match in matches:
-        key = text.find(match)
-        r = text[key + 2]
-        v = text[key + 1]
-        text = list(text)
-        if v == 'ь':
-            text[key + 1] = 'є'
+    new_text = ''
+    cdef int i = 0
+    cdef int l = len(text)
+    while i < l:
+        if i + 3 >= l:
+            new_text += text[i]
+            i += 1
         else:
-            text[key + 1] = 'о'
-        text[key + 2] = r
-        text = ''.join(text)
-    return text
+            if text[i] in set4 and text[i+1] in 'ъь' and text[i+2] in 'рл' and text[i+3] in set4:
+                if text[i+1] == 'ь':
+                    new_text += text[i] + 'є' + text[i+2] + text[i+3]
+                else:
+                    new_text += text[i] + 'о' + text[i+2] + text[i+3]
+                i += 4
+            else:
+                new_text += text[i]
+                i += 1
+    return new_text
 
 def unify_r_and_l_with_yat(text):
     """Превращается сочетание 'согласный + р/л + ѣ + согласный' в 'согласный + р/л + є + согласный'"""
+    '''
     matches = re.findall('([' + set4 + '][рл]ѣ[' + set4 + '])', text)
     cdef int key
     for match in matches:
@@ -171,6 +220,22 @@ def unify_r_and_l_with_yat(text):
         text[key + 2] = 'є'
         text = ''.join(text)
     return text
+    '''
+    new_text = ''
+    cdef int i = 0
+    cdef int l = len(text)
+    while i < l:
+        if i + 3 >= l:
+            new_text += text[i]
+            i += 1
+        else:
+            if text[i] in set4 and text[i+1] in 'рл' and text[i+2] in 'ѣ' and text[i+3] in set4:
+                new_text += text[i] + text[i+1] + 'є' + text[i+3]
+                i += 4
+            else:
+                new_text += text[i]
+                i += 1
+    return new_text
 
 def drop_shwas(text):
     """Положить редуцированные."""
@@ -195,28 +260,28 @@ def drop_shwas(text):
 
 
 def add_shwas(text):
-    """Добавим редуцированные."""
+    """Добавим редуцированные после ВСЕХ согласных не перед гласными."""
     new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
-        if text[i] == text[-1]:
+        if i + 1 == l:
             if text[i] in set4:
                 new_text += text[i] + 'ъ'
             else:
                 new_text += text[i]
         else:
-            if text[i] in set4 and text[i + 1] in set4:
+            if text[i] in set4 and not text[i + 1] in set2:
                 new_text += text[i] + 'ъ'
             else:
                 new_text += text[i]
         i += 1
     return new_text
-        
 
-#print(drop_shwas('пъпъпыпьпъпъпъпьпьпапъ'))
 
 def unify(text):
+    if not text:
+        return ''
     text = strip_stuff(text)
     text = unify_various_symbols(text)
     text = unify_final_shwa(text)
@@ -232,6 +297,7 @@ def unify(text):
 
 def test():
     words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ',
-             'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь', 'приь', 'прюьп', 'жю', 'жюк', 'властелин')
+             'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь', 'приь', 'прюьп', 'жю',
+             'жюк', 'властелин', 'привет привет', 'пъпъпыпьпъпъпъпьпьпапъ', 'ка', 'к', 'трѢт', 'адвлѢвап')
     for word in words:
         print(unify(word))
