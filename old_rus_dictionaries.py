@@ -1,6 +1,10 @@
 from flask import Flask, render_template, url_for, redirect, request
 import json
-from unification import unify
+import pyximport; pyximport.install()
+from data_processing.unification import unify
+
+__author__ = "Michael Voronov, Anna Sorokina"
+__license__ = "GPLv3"
 
 with open('data_processing/matched.json', 'r', encoding='utf-8') as f:
     js = json.loads(f.read())

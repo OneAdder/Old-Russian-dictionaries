@@ -1,4 +1,5 @@
 #cython: language_level=3, boundscheck=False
+"""Функции, которые приводят графику двух словарей в единый формат"""
 __author__ = "Michael Voronov, Anna Sorokina"
 __license__ = "GPLv3"
 
