@@ -24,6 +24,14 @@ body{
 .pos{
 	color: rgba(255,255,255,0.8);
 	font-style: italic;
+	font-size: 0.9em;
+	}
+
+.gram{
+	font-size: 0.9em;
+	/*	float: right;*/  
+	font-style: italic;
+	color: rgba(255,255,255,0.8);
 	}
 
 .sense-body{

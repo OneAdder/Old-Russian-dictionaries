@@ -11,14 +11,20 @@
     <div class="entry-body">
 		{% if res["avanesov_lemma"] %} 
 		<div class="dict-result">
-				<h3 class="dict-title">Russian dictionary of 11th-14th centuries</h3>
+			<h3 class="dict-title">Russian dictionary of 11th-14th centuries</h3>
 				<div class="sense-block">
 					<h4 class="word-info">
-						<span class="headword">{{ res["avanesov_lemma"].lower() }} </span>
-						<span class="pos">{{ res["avanesov_data"]["gramGrp"].lower() }} </span>
-						<!---{% if res["avanesov_data"]["inflected"] == "False" %} 
+						<span class="headword">{{ res["avanesov_lemma"]|lower }} </span>
+						<span class="pos">{{ res["avanesov_data"]["gramGrp"]|lower }} </span><br>
+						{% if res["avanesov_data"]["inflected"] == False %} 
 							<span class="gram">неизм.</span>
-						{% endif %} --->
+							{% elif res["avanesov_data"]["inflected"] == True %}
+							<span class="gram">
+								{% for gr, flec in res["avanesov_data"]["inflection"].items() %}
+									-{{ flec|lower }} ({{ gr }})
+								{% endfor %}
+							</span>
+						{% endif %} 
 					</h4>
 					<div class="sense-body">
 						<div class="def">
@@ -33,7 +39,16 @@
 				</div>
 			</div>
 		{% endif %}
-		
+		{% if res["XVII_lemma"] %} 
+		<div class="dict-result">
+			<h3 class="dict-title">Dictionary of 11th-17th centuries</h3>
+				<div class="sense-block">
+					<h4 class="word-info">
+						<span class="headword">{{ res["XVII_lemma"]|lower }} </span>
+					</h4>
+				</div>
+			</div>
+		{% endif %}		
     </div>
     
 	<p><a href="/search">Go back to search</a></p>
