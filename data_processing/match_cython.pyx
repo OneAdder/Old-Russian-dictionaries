@@ -15,9 +15,9 @@ x11 = list(shit.MainLemma)
 def match_(avanesov):
     """Вложенный цикл по двум словарям."""
     global x11
-    number = os.getpid()
-    r = 0
-    pool_length = len(avanesov)
+    cdef int number = os.getpid()
+    cdef int r = 0
+    cdef int pool_length = len(avanesov)
     for avanesov_lemma in avanesov:
         for x11_lemma in x11:
             x11_unified = unify(x11_lemma)

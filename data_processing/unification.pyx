@@ -211,16 +211,6 @@ def unify_r_and_l_with_shwas2(text):
 
 def unify_r_and_l_with_yat(text):
     """Превращается сочетание 'согласный + р/л + ѣ + согласный' в 'согласный + р/л + є + согласный'"""
-    '''
-    matches = re.findall('([' + set4 + '][рл]ѣ[' + set4 + '])', text)
-    cdef int key
-    for match in matches:
-        key = text.find(match)
-        text = list(text)
-        text[key + 2] = 'є'
-        text = ''.join(text)
-    return text
-    '''
     new_text = ''
     cdef int i = 0
     cdef int l = len(text)
