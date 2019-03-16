@@ -2,16 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<title></title>
+    <title></title>
     <link rel="stylesheet" type="text/css" href="../static/styles/style.css" >
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
 </head>
 <body>
-	<h2>Search</h2>
-    <form method="post">
-        <input type="text" name="word" placeholder="Type the word"><br>
-        <input type="submit" value="Submit">       
-<!--- <input name="srj" type="checkbox">Search in 11-17 dictionary<br>
-        <input name="sdrj" type="checkbox" checked>Search in 11-14 dictionary<br><br> --->
-    </form>
+    <h2>Сводный словарь русской лексики от XI до XVII века</h2>
+    <div class=tab-body>
+        <button class="tablinks" onclick="openPage('Home', this, '#00001a')" id="defaultOpen">Поиск</button>
+        <button class="tablinks" onclick="openPage('Dict14', this, 'green')">Словарь древнерусского языка XI–XIV веков</button>
+        <button class="tablinks" onclick="openPage('Dict17', this, 'orange')">Словарь русского языка XI–XVII веков</button>
+        <!-- Вкладка со страницей для поиска -->
+        <div id="Home" class="tabcontent">
+            <div class="search-field">
+                <form method="post">
+                    <input type="text" id="word" name="word" placeholder="Type the word" />
+                    <button type="submit" class="btn btn-info"><i class='fas fa-search'></i></button>
+                    <button type="reset" class="btn btn-info" onclick="window.location.href='../'"><i class='fas fa-times'></i></button>
+                    <!--- <input name="srj" type="checkbox">Search in 11-17 dictionary<br>
+                    <input name="sdrj" type="checkbox" checked>Search in 11-14 dictionary<br><br> --->
+                </form>
+            </div>
+            <!-- Если слово найдено в словаре; контейнер entry-body для результатов поиска по всем словарям, контейнер  dict-result - для каждого из словарей -->
+            {% if res %}
+            <div class="entry-body">
+                {% if res["avanesov_lemma"] %} 
+                <div class="dict-result">
+                    <p class="dict-title">Russian dictionary of 11th-14th centuries</p>
+                    <div class="sense-block">
+                        <h4 class="word-info">
+                            <span class="headword">{{ res["avanesov_lemma"]|lower }} </span><br>
+                            <span class="pos">{{ res["avanesov_data"]["gramGrp"]|lower }}.</span>
+                            {% if res["avanesov_data"]["inflected"] == False %} 
+                            <span class="gram">неизм.</span>
+                            {% elif res["avanesov_data"]["inflected"] == True %}
+                                <span class="gram">
+                                {% for gr, flec in res["avanesov_data"]["inflection"].items() %}
+                                    -{{ flec|lower }} ({{ gr }})
+                                {% endfor %}
+                                </span>
+                            {% endif %} 
+                        </h4>
+                        <div class="sense-body">
+                            <div class="def">{{ res["avanesov_data"]["definition"] }}</div>
+                            <div class="ex">
+                            {% for ex in res["avanesov_data"]["examples"] %}
+                                <p class="ex-body"> {{ ex["example"] }} <span class="ex-source">{{ ex["src"] }}</span></p>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if res["XVII_lemma"] %} 
+                <div class="dict-result">
+                    <p class="dict-title">Dictionary of 11th-17th centuries</p>
+                    <div class="sense-block">
+                    <h4 class="word-info"><span class="headword">{{ res["XVII_lemma"]|lower }}</span></h4>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% elif comment %}
+            <div class="entry-body">
+                <div class="dict-result"><p>{{ comment }}</p></div>
+            </div>
+            {% endif %}
+        </div>
+        <!-- Вкладка, куда можно добавить описание словаря или всего проекта -->
+        <div id="Dict14" class="tabcontent">
+            <div class="dict-info">
+                <h4 class="dict-info-title">Словарь древнерусского языка XI–XIV вв.</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+        <!-- Вкладка, куда можно добавить описание словаря или всего проекта -->
+        <div id="Dict17" class="tabcontent">
+            <div class="dict-info">
+                <h4 class="dict-info-title">Словарь русского языка XI–XVII вв.</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+    <p><a href='https://github.com/OneAdder/Old-Russian-dictionaries' style="text-decoration: none; color: #FFF; font-wieght: bold">Github</a></p>
+    </footer>
+<script>
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
 </body>
 </html>

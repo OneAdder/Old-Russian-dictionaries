@@ -19,6 +19,20 @@ def index():
 def search():
     if request.method == 'POST':
         qu = request.form['word']
+        qu = qu.lower()
+        query = unify(qu)
+        try:
+            res = js[query]
+            return render_template('search.html', res=res)
+        except KeyError: 
+            return render_template('search.html', comment='There is no such entry')
+    return render_template('search.html')
+
+"""
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        qu = request.form['word']
         return redirect(url_for('search_result', query=qu))
     return render_template('search.html')
 
@@ -33,7 +47,7 @@ def search_result(query):
     except KeyError: 
         return render_template('error.html', comment='There is no such entry')
 
-""" 
+
 # бывший поиск по avanesov.json
     for entry in js:
         if entry['unified_lemma'] == query:
