@@ -1,5 +1,6 @@
 import json
 import pandas
+import pyximport; pyximport.install()
 from unification import unify
 
 with open('prematched.json', 'r') as f:

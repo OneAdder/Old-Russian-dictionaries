@@ -8,8 +8,6 @@ import match_cython
 from multiprocessing import Pool
 import os
 
-from unification import unify
-
 CPU_CORES = 4
 
 with open('avanesov2.json', 'r', encoding='utf-8') as f:

@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import json
+import pyximport; pyximport.install()
 from unification import unify
 
 with open('Словарь древнерусского языка (big).tei') as f:

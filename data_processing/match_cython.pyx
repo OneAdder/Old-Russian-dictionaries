@@ -1,6 +1,8 @@
+#cython: language_level=3, boundscheck=False
 import os
 import pandas
 import re
+from unification import unify
 
 shit = pandas.read_csv('wordlist_linked.csv', delimiter=',', header=0)
 
@@ -23,7 +25,6 @@ def match_(avanesov):
         r += 1
     return avanesov
 
-import re
 
 iotated = 'юиѭѩѥꙓꙑ'
 set1 = {'ш', 'щ', 'ж', 'ч', 'ц'}
@@ -219,7 +220,9 @@ def add_shwas(text):
             else:
                 new_text += sym
     return new_text
+        
 
+#print(drop_shwas('пъпъпыпьпъпъпъпьпьпапъ'))
 
 def unify(text):
     text = strip_stuff(text)
