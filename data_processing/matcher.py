@@ -1,7 +1,6 @@
 import json
-import pandas
 import itertools
-import random
+
 import pyximport; pyximport.install()
 import match_cython
 
