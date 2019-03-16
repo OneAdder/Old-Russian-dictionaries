@@ -1,4 +1,6 @@
 """См. докстринги в matcher.py. Этот модуль -- аналогичный скрипт, только для восьмипоточных CPU."""
+__author__ = "Michael Voronov, Anna Sorokina"
+__license__ = "GPLv3"
 
 import json
 import pandas

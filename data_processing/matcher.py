@@ -21,6 +21,8 @@
         Функция на языке Cython из модуля match_cython. Принимает часть словаря Аванесова (или весь словарь),
         возвращает словарь, где для всех (по возможности) лемм были найдены соответствия из словаря XI-XVII.
 """
+__author__ = "Michael Voronov, Anna Sorokina"
+__license__ = "GPLv3"
 
 import json
 import itertools

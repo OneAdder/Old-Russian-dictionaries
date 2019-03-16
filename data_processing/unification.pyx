@@ -1,4 +1,6 @@
 #cython: language_level=3, boundscheck=False
+__author__ = "Michael Voronov, Anna Sorokina"
+__license__ = "GPLv3"
 
 import re
 

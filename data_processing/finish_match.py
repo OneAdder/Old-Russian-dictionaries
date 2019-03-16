@@ -1,4 +1,7 @@
 """Берёт те статьи из словаря XI-XVII, для которых не нашлось соответствий в словаре Аванесова. Пишет это всё в 'matched.json'."""
+__author__ = "Michael Voronov, Anna Sorokina"
+__license__ = "GPLv3"
+
 import json
 import pandas
 import pyximport; pyximport.install()

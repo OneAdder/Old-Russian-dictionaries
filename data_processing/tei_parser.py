@@ -1,4 +1,7 @@
 """Парсит словарь в виде TEI и сохраняет в avanesov2.json"""
+__author__ = "Michael Voronov, Anna Sorokina"
+__license__ = "GPLv3"
+
 from bs4 import BeautifulSoup
 import json
 import pyximport; pyximport.install()
