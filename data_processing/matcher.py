@@ -3,10 +3,10 @@
 Пояснение: Idle это не запускает, запускать можно просто интерпретатором python3.
 Внешние зависимости: cython3.
 Переменные:
-    CPU_CORES: int (значение: 4)
-        Если ядер больше четырёх, лучше разбить словарь на столько частей. сколько ядер.
     avanesov: dict
         JSON со словарём Аванесова.
+    CPU_CORES: int
+        Количество ядер процессора (меньше четырёх не рекомендую).
     lengt: int
         Количество статей в словаре Аванесова, нужно для отображения прогресса.
     pool:
@@ -16,7 +16,7 @@
 
 Функции:
     splitDict(dict)
-        Делит словарь на две части (взято с просторов сети Интернет.
+        Делит словарь на n частей.
     match_(dict)
         Функция на языке Cython из модуля match_cython. Принимает часть словаря Аванесова (или весь словарь),
         возвращает словарь, где для всех (по возможности) лемм были найдены соответствия из словаря XI-XVII.
@@ -30,10 +30,10 @@ import itertools
 import pyximport; pyximport.install()
 import match_cython
 
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 import os
 
-CPU_CORES = 4
+CPU_CORES = cpu_count()
 
 with open('avanesov2.json', 'r', encoding='utf-8') as f:
     avanesov = json.loads(f.read())
@@ -42,25 +42,31 @@ lengt = len(avanesov)
 print('Total:')
 print(lengt)
 
+def split_dict(d, n):
+    it = list(d.items())
+    lent = len(it)
+    avg = lent / float(n)
+    out = []
+    last = 0.0
 
-def splitDict(d):
-    n = len(d) // 2
-    i = iter(d.items())
+    while last < lent:
+        out.append(it[int(last): int(last + avg)])
+        last += avg
+    dicts = []
+    for items in out:
+        dicts.append({key: value for key, value in items})
+    return dicts
 
-    d1 = dict(itertools.islice(i, n))
-    d2 = dict(i)
-    return d1, d2
-
-avanesov1, avanesov3 = splitDict(avanesov)
-
-avanesov1, avanesov2 = splitDict(avanesov1)
-avanesov3, avanesov4 = splitDict(avanesov3)
+avanesovs = split_dict(avanesov, CPU_CORES)
 
 match_ = match_cython.match_
 
 pool = Pool(processes=CPU_CORES)
-matched1, matched2, matched3, matched4 = pool.map(match_, (avanesov1, avanesov2, avanesov3, avanesov4))
-matched = {**matched1, **matched2, **matched3, **matched4}
+matches = pool.map(match_, avanesovs)
+matched = {}
+
+for d in matches:
+    matched = {**matched, **d}
 
 with open('prematched.json', 'w') as f:
     json.dump(matched, f, indent=4, ensure_ascii=False)
