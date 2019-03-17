@@ -12,7 +12,7 @@ set4 = 'цкнгшщзхфвпрлджчсмтб'
 def strip_stuff(text):
     """Приводит в нижний регистр и убирает '|' и прочее."""
     text = text.lower()
-    cdef new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
