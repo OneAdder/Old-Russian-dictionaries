@@ -20,6 +20,8 @@ def strip_stuff(text):
             i += 1
         elif text[i] == '.':
             i += 1
+        elif text[i] == '-':
+            i += 1
         elif text[i] == ' ':
             break
         else:

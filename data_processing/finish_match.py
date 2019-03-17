@@ -2,23 +2,30 @@
 __author__ = "Michael Voronov, Anna Sorokina"
 __license__ = "GPLv3"
 
+
 import json
 import pandas
+
 import pyximport; pyximport.install()
 from unification import unify
+
+low_memory = False
 
 with open('prematched.json', 'r') as f:
     prematched = json.loads(f.read())
 
-shit = pandas.read_csv('wordlist_linked.csv', delimiter=',', header=0)
-x11 = list(shit.MainLemma)
-x11 = [x11_lemma for x11_lemma in x11 if not unify(x11_lemma) in prematched]
+shit = pandas.read_csv('wordlist_linked.csv', delimiter=',', header=0, low_memory=False)
+x11 = list(shit.LemmaIndex)
+#x11 = [x11_lemma for x11_lemma in x11 if not unify(x11_lemma) in prematched]
 
 for x11_lemma in x11:
-    x11_unified = unify(x11_lemma)
-    prematched[x11_unified] = {
-        'XVII_lemma': x11_lemma
-    }
+    if isinstance(x11_lemma, str):
+        x11_unified = unify(x11_lemma)
+        if not x11_unified in prematched:
+            prematched[x11_unified] = {
+                'XVII_lemma': x11_lemma
+            }
+        
 
 with open('matched.json', 'w') as f:
     json.dump(prematched, f, indent=4, ensure_ascii=False) 
