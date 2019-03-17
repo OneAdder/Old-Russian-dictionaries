@@ -2,8 +2,8 @@ from flask import Flask, render_template, url_for, redirect, request
 import json
 import pyximport; pyximport.install()
 try:
-    from fgdata_processing.unification import unify
-except:
+    from data_processing.unification import unify
+except AttributeError:
     import sys
     sys.path.insert(0, './data_processing')
     from unification import unify
