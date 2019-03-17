@@ -15,17 +15,25 @@ x11 = list(shit.MainLemma)
 def match_(avanesov):
     """Вложенный цикл по двум словарям."""
     global x11
+    avanesov_lemmas = tuple(avanesov.keys())
     cdef int number = os.getpid()
-    cdef int r = 0
-    cdef int pool_length = len(avanesov)
-    for avanesov_lemma in avanesov:
-        for x11_lemma in x11:
+    cdef int pool_length = len(avanesov_lemmas)
+    cdef int avanesov_len = len(avanesov_lemmas)
+    cdef int x11_len = len(x11)
+    cdef int i = 0
+    cdef int j = 0
+    while i < avanesov_len:
+        avanesov_lemma = avanesov_lemmas[i]
+        j = 0
+        while j < x11_len:
+            x11_lemma = x11[j]
             x11_unified = unify(x11_lemma)
             if x11_unified == avanesov_lemma:
-                ready = 100 - (((pool_length - r) * 100)/pool_length)
-                print(str(number) + ': ' + str(ready))
+                ready = round(100 - (((pool_length - i) * 100)/pool_length), 2)
+                print(str(number) + ': ' + str(ready) + '%')
                 print(x11_unified)
                 avanesov[avanesov_lemma]['XVII_lemma'] = x11_lemma
-        r += 1
+            j += 1
+        i += 1
     return avanesov
 
