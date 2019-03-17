@@ -12,7 +12,7 @@ set4 = 'цкнгшщзхфвпрлджчсмтб'
 def strip_stuff(text):
     """Приводит в нижний регистр и убирает '|' и прочее."""
     text = text.lower()
-    new_text = ''
+    cdef new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -56,7 +56,7 @@ def unify_various_symbols(text):
         'ѽ': 'о',
         '҃': ''
     }
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -101,7 +101,7 @@ def unify_vowels_after_set1(text):
         'ѫ': 'ѹ',
         'ѭ': 'ѹ'
     }
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int l = len(text)
     cdef int i = 0
     while i < l:
@@ -142,7 +142,7 @@ def unify_iotated(text):
         'ѭ': 'ѫ',
         'ꙓ': 'ѣ'
     }
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -160,7 +160,7 @@ def unify_iotated(text):
 
 def unify_i_and_front_shwa(text):
     """Превращает 'ь' после 'i' и йотированных в 'и'"""
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -178,7 +178,7 @@ def unify_i_and_front_shwa(text):
 
 def unify_r_and_l_with_shwas1(text):
     """Превращает сочетание 'согласный + р/л + ь/ъ + согласный' в 'согласный + є/о + р/л + согласный'"""
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -201,7 +201,7 @@ def unify_r_and_l_with_shwas1(text):
 
 def unify_r_and_l_with_shwas2(text):
     """Превращает сочетание 'согласный + ь/ъ + р/л + согласный' в 'согласный + є/о + р/л + согласный'"""
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -222,7 +222,7 @@ def unify_r_and_l_with_shwas2(text):
 
 def unify_r_and_l_with_yat(text):
     """Превращает сочетание 'согласный + р/л + ѣ + согласный' в 'согласный + р/л + є + согласный'"""
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -262,7 +262,7 @@ def drop_shwas(text):
 
 def add_shwas(text):
     """Добавим редуцированные после ВСЕХ согласных не перед гласными."""
-    new_text = ''
+    cdef unicode new_text = ''
     cdef int i = 0
     cdef int l = len(text)
     while i < l:
@@ -300,23 +300,24 @@ def unify(text):
     """
     if not text:
         return ''
-    text = strip_stuff(text)
-    text = unify_various_symbols(text)
-    text = unify_final_shwa(text)
-    text = unify_vowels_after_set1(text)
-    text = unify_iotated(text)
-    text = unify_i_and_front_shwa(text)
-    text = unify_r_and_l_with_shwas1(text)
-    text = unify_r_and_l_with_shwas2(text)
-    text = unify_r_and_l_with_yat(text)
-    text = drop_shwas(text)
-    text = add_shwas(text)
-    return text
+    cdef unicode new_text
+    new_text = strip_stuff(text)
+    new_text = unify_various_symbols(new_text)
+    new_text = unify_final_shwa(new_text)
+    new_text = unify_vowels_after_set1(new_text)
+    new_text = unify_iotated(new_text)
+    new_text = unify_i_and_front_shwa(new_text)
+    new_text = unify_r_and_l_with_shwas1(new_text)
+    new_text = unify_r_and_l_with_shwas2(new_text)
+    new_text = unify_r_and_l_with_yat(new_text)
+    new_text = drop_shwas(new_text)
+    new_text = add_shwas(new_text)
+    return new_text
 
 def test():
     words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ',
              'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь', 'приь', 'прюьп', 'жю',
              'жюк', 'властелин', 'привет привет', 'пъпъпыпьпъпъпъпьпьпапъ', 'ка', 'к', 'трѢт', 'адвлѢвап')
     for word in words:
-        return unify(word)
+        yield unify(word)
  
