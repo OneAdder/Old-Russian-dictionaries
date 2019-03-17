@@ -1,4 +1,45 @@
+import time
+from statistics import mean
+from multiprocessing import cpu_count
+
+import unification_old
+
 import pyximport; pyximport.install()
 import unification
 
-unification.test()
+
+def short_test():
+    for el in unification.test():
+        print(el)
+
+def mean_test():
+    new = []
+    old = []
+    i = 0
+    while i < 100:
+        t = time.process_time()
+        unification.test()
+        t2 = time.process_time() - t
+        new.append(t2)
+        i += 1
+    i = 0
+    while i < 100:
+        t = time.process_time()
+        unification_old.test()
+        t2 = time.process_time() - t
+        old.append(t2)
+        i += 1
+
+    mean_new = mean(new) / 24
+    mean_old = mean(old) / 24
+    
+    print('CPython + regexp: ' + str(mean_old))
+    est = (108170 * 9773 * mean_old) / cpu_count()
+    print('Estimated long loop time: %.2f s = %.2f m = %.2f h' % (est, est / 60, est / 3600))
+    print()
+    print('Cython + while: ' + str(mean_new))
+    est = (108170 * 9773 * mean_new * 0.25) / cpu_count()
+    print('Estimated long loop time: %.2f s = %.2f m = %.2f h' % (est, est / 60, est / 3600))
+
+mean_test()
+
