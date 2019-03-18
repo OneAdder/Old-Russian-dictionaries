@@ -36,6 +36,8 @@ import match_cython
 from multiprocessing import Pool, cpu_count
 import os
 
+CPU_CORES = cpu_count()
+
 def split_dict(d, n):
     it = list(d.items())
     lent = len(it)
@@ -83,8 +85,6 @@ avanesovs = split_dict(avanesov, CPU_CORES)
 └——————————————————————————————————————————————————————————┘
 —————————————————————————————————————————————————————————————————————————————————————┐
 '''
-
-CPU_CORES = cpu_count()
 
 match_ = match_cython.match_
 
