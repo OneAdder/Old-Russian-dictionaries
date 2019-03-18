@@ -439,3 +439,33 @@ def compare(word1, word2):
     cdef unicode word2_with_dropped_open_shwa_vowels = drop_shwas(word2_with_open_shwa_vowels)
     if word1_with_dropped_open_shwa_vowels == word2_with_dropped_open_shwa_vowels:
         return word1_with_dropped_open_shwa_vowels
+
+
+def full_comparison(word1, word2):
+    """Возвращает все совпадающие варианты."""
+    cdef tuple word1_vars = all_options(word1)
+    cdef tuple word2_vars = all_options(word2)
+    cdef list result = []
+    cdef int i = 0
+    cdef int l1 = len(word1_vars)
+    cdef int j = 0
+    cdef int l2 = len(word2_vars)
+    while i < l1:
+        j = 0
+        while j < l2:
+            if word1_vars[i] == word2_vars[j]:
+                result.append(word1_vars[i])
+            j += 1
+        i += 1
+    return result
+
+
+def safe_comparison(word1, word2):
+    """Возвращает вариант, совпадающий с unify(word1) или unify(word2)."""
+    cdef list vares = full_comparison(word1, word2)
+    cdef unicode unified = unify(word1)
+    cdef unicode unified2 = unify(word2)
+    for var in vares:
+        if var == unified or var == unified2:
+            return var
+    
