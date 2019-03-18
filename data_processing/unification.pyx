@@ -258,6 +258,12 @@ def unify_r_and_l_with_yat(text):
                 i += 1
     return new_text
 
+def ie(text):
+    """Заменяет ье на ие в конце слова"""
+    cdef unicode new_text = ''
+    new_text = text.replace('ьє', 'иє')
+    return new_text
+
 def drop_shwas(text):
     """Положить редуцированные."""
     text = list(text)
@@ -312,6 +318,20 @@ def replace_shwas(text):
         else:
             new_text += text[i]
         i += 1
+    return new_text
+
+def mix_shwas(text):
+    """Приводит редуцированные к ъ."""
+    cdef unicode new_text = ''
+    cdef int i = 0
+    cdef int l = len(text)
+    while i < l:
+        if text[i] == 'ь':
+            new_text += 'ъ'
+        else:
+            new_text += text[i]
+        i += 1
+    return new_text
 
 def pre_unify(text):
     """Унифицирует всё, кроме редуцированных."""
@@ -351,55 +371,30 @@ def unify(text):
         return ''
     cdef unicode new_text
     new_text = pre_unify(text)
+    new_text = drop_shwas(new_text)
     new_text = add_shwas(new_text)
+    new_text = ie(new_text)
     return new_text
 
-def compare(word1, word2):
-    """Данная функция сравнивает два слова тремя способами.
+def all_options(word):
+    """Данная функция возвращает все возможные способы написания.
     
     1. Редуцированные упали/прояснились.
     2. Редуцированные добавились по принципу открытого слога.
-    3. Редуцированные прояснились в є/о.
+    #3. Редуцированные прояснились в є/о.
     4. Редуцированные добавились, после чего упали/прояснились.
-    5. Редуцированные добавились, после чего прояснились в є/о.
+    #5. Редуцированные добавились, после чего прояснились в є/о.
+    #6. Редуцированные совпали в ъ.
+    
+    После этого во всех случаях добавляются ъ по принципу открытого слога
     """
-    cdef unicode pre_unified1 = pre_unify(word1)
-    cdef unicode pre_unified2 = pre_unify(word2)
-    
-    cdef unicode word1_without_shwas = drop_shwas(pre_unified1)
-    cdef unicode word2_without_shwas = drop_shwas(pre_unified2)
-    if word1_without_shwas == word2_without_shwas:
-        return add_shwas(word1_without_shwas)
-    
-    cdef unicode word1_with_open_shwa_vowels = add_shwas(pre_unified1)
-    cdef unicode word2_with_open_shwa_vowels = add_shwas(pre_unified2)
-    if word1_with_open_shwa_vowels == word2_with_open_shwa_vowels:
-        return word1_with_open_shwa_vowels
-    
-    cdef unicode word1_replaced_shwas = replace_shwas(pre_unified1)
-    cdef unicode word2_replaced_shwas = replace_shwas(pre_unified2)
-    if word1_replaced_shwas == word2_replaced_shwas:
-        return word1_replaced_shwas
-    
-    cdef unicode word1_with_dropped_open_shwa_vowels = drop_shwas(word1_with_open_shwa_vowels)
-    cdef unicode word2_with_dropped_open_shwa_vowels = drop_shwas(word2_with_open_shwa_vowels)
-    if word1_with_dropped_open_shwa_vowels == word2_with_dropped_open_shwa_vowels:
-        return word1_with_dropped_open_shwa_vowels
-    
-    cdef unicode word1_added_replaced = replace_shwas(word1_with_open_shwa_vowels)
-    cdef unicode word2_added_replaced = replace_shwas(word2_with_open_shwa_vowels)
-    if word1_added_replaced == word2_added_replaced:
-        return word1_added_replaced
+    cdef unicode pre_unified = pre_unify(word)
 
+    cdef unicode word_without_shwas = drop_shwas(pre_unified)
+    cdef unicode word_with_open_shwa_vowels = add_shwas(pre_unified)
+    cdef unicode word_replaced_shwas = replace_shwas(pre_unified)
+    cdef unicode word_with_dropped_open_shwa_vowels = drop_shwas(word_with_open_shwa_vowels)
+    cdef unicode word_added_replaced = replace_shwas(word_with_open_shwa_vowels)
     
+    return tuple(map(add_shwas, (word_without_shwas, word_with_open_shwa_vowels, word_with_dropped_open_shwa_vowels)))
 
-def test1():
-    words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ',
-             'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь', 'приь', 'прюьп', 'жю',
-             'жюк', 'властелин', 'привет привет', 'пъпъпыпьпъпъпъпьпьпапъ', 'ка', 'к', 'трѢт', 'адвлѢвап')
-    return map(unify, words)
-
-def test2():
-    word_pairs = (('врачение', 'ВРАЧЕНИ|Ѥ'), ('всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь'), ('молъчание', 'мълчание'), ('молъчание', 'мълъчание'), ('молъчание', 'молчание'), ('мълчание', 'мълъчание'),
-                  ('врачение', 'ВРАЧЕНИ|Ѥ'), ('всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь'), ('молъчание', 'мълчание'), ('молъчание', 'мълъчание'), ('молъчание', 'молчание'), ('мълчание', 'мълъчание'))
-    return (compare(*word_pair) for word_pair in word_pairs)

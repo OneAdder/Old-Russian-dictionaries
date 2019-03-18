@@ -3,12 +3,7 @@ from statistics import mean
 from multiprocessing import cpu_count
 
 import pyximport; pyximport.install()
-import unification
-
-
-def short_test():
-    for el in unification.test():
-        print(el)
+from unification import *
 
 def mean_test():
     import unification_old
@@ -42,6 +37,6 @@ def mean_test():
     est = (108170 * 9773 * mean_new * 0.25) / cpu_count()
     print('Estimated long loop time: %.2f s = %.2f m = %.2f h' % (est, est / 60, est / 3600))
 
-mean_test()
+#mean_test()
 #short_test()
 
