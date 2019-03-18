@@ -8,8 +8,6 @@ import pandas
 import re
 from unification import compare
 
-shit = []
-
 x11 = []
 
 cdef extern from "math.h":
@@ -27,7 +25,7 @@ def match_(avanesov):
     cdef int avanesov_len = len(avanesov_lemmas)
     cdef int x11_len = len(x11)
     cdef int i = 0
-    cdef int j = 0
+    cdef long int j = 0
     cdef short dumm
     cdef float ready
     cdef unicode avanesov_lemma

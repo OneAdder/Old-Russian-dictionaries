@@ -73,7 +73,9 @@ with open('avanesov2.json', 'r', encoding='utf-8') as f:
 
 shit = pandas.read_csv('wordlist_linked.csv', delimiter=',', header=0, dtype=str, low_memory=False)
 
-x11 = set(shit.LemmaIndex)
+x11 = list(set(shit.LemmaIndex))
+
+match_cython.x11 = x11
 
 '''
 ——————————————————————————————————————————————————————————————————————————————————————————┘
