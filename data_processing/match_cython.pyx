@@ -1,5 +1,5 @@
 #cython: language_level=3, boundscheck=False
-
+"""Этот модуль берёт оставшиеся леммы из словаря XI-XVII и добавляет их в итоговый словарь matched.json"""
 __author__ = "Michael Voronov, Anna Sorokina"
 __license__ = "GPLv3"
 
@@ -9,16 +9,19 @@ import re
 from math import isnan
 from unification import unify
 
-shit = pandas.read_csv('wordlist_linked.csv', delimiter=',', header=0)
+shit = []
 
-x11 = list(shit.LemmaIndex)
+x11 = []
 
 cdef extern from "math.h":
     float roundf(float x)
 
 def match_(avanesov):
-    """Вложенный цикл по двум словарям."""
-    global x11
+    """Вложенный цикл по двум словарям.
+    
+    Переменные заранее объявлены вне цикла.
+    Используется цикл while, так как он переводится в C без изменений.
+    """
     avanesov_lemmas = tuple(avanesov.keys())
     cdef int number = os.getpid()
     cdef int pool_length = len(avanesov_lemmas)
