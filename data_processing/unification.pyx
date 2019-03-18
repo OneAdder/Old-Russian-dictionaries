@@ -21,11 +21,13 @@
 __author__ = "Michael Voronov, Anna Sorokina"
 __license__ = "GPLv3"
 
+
 iotated = 'юиѭѩѥꙓꙑ'
 set1 = {'ш', 'щ', 'ж', 'ч', 'ц'}
 set2 = 'аоєѹiѧѫѣъьѵѷ' + iotated
 set3 = 'i' + iotated
 set4 = 'цкнгшщзхфвпрлджчсмтб'
+
 
 def strip_stuff(text):
     """Приводит в нижний регистр и убирает '|' и прочее."""
@@ -46,6 +48,7 @@ def strip_stuff(text):
             new_text += text[i]
             i += 1
     return new_text
+
 
 def unify_various_symbols(text):
     """Унифицирует разные варианты."""
@@ -101,11 +104,13 @@ def unify_various_symbols(text):
                 i += 1
     return new_text
 
+
 def unify_final_shwa(text):
     """Приводит 'ъ' и 'ь' в конце к 'ъ'"""
     if text.endswith('ь'):
         text = text[:-1] + 'ъ'
     return text
+
 
 def unify_vowels_after_set1(text):
     """Переводит нестрого йотированные после 'ш', 'щ', 'ж', 'жд', 'ч', 'ц' в строго не-йотированные.
@@ -148,6 +153,7 @@ def unify_vowels_after_set1(text):
                 i += 1
     return new_text
 
+
 def unify_iotated(text):
     """Убирает йотацию в начале слова и после гласных.
     
@@ -178,6 +184,7 @@ def unify_iotated(text):
                 i += 1
     return new_text
 
+
 def unify_i_and_front_shwa(text):
     """Превращает 'ь' после 'i' и йотированных в 'и'"""
     cdef unicode new_text = ''
@@ -195,6 +202,7 @@ def unify_i_and_front_shwa(text):
                 new_text += text[i]
                 i += 1
     return new_text
+
 
 def unify_r_and_l_with_shwas1(text):
     """Превращает сочетание 'согласный + р/л + ь/ъ + согласный' в 'согласный + є/о + р/л + согласный'"""
@@ -240,6 +248,7 @@ def unify_r_and_l_with_shwas2(text):
                 i += 1
     return new_text
 
+
 def unify_r_and_l_with_yat(text):
     """Превращает сочетание 'согласный + р/л + ѣ + согласный' в 'согласный + р/л + є + согласный'"""
     cdef unicode new_text = ''
@@ -258,11 +267,13 @@ def unify_r_and_l_with_yat(text):
                 i += 1
     return new_text
 
+
 def ie(text):
     """Заменяет ье на ие в конце слова"""
     cdef unicode new_text = ''
     new_text = text.replace('ьє', 'иє')
     return new_text
+
 
 def drop_shwas(text):
     """Положить редуцированные."""
@@ -305,6 +316,7 @@ def add_shwas(text):
         i += 1
     return new_text
 
+
 def replace_shwas(text):
     """Меняет редуцированные на є/о"""
     cdef unicode new_text = ''
@@ -320,6 +332,7 @@ def replace_shwas(text):
         i += 1
     return new_text
 
+
 def mix_shwas(text):
     """Приводит редуцированные к ъ."""
     cdef unicode new_text = ''
@@ -332,6 +345,7 @@ def mix_shwas(text):
             new_text += text[i]
         i += 1
     return new_text
+
 
 def pre_unify(text):
     """Унифицирует всё, кроме редуцированных."""
@@ -348,6 +362,7 @@ def pre_unify(text):
     new_text = unify_r_and_l_with_shwas2(new_text)
     new_text = unify_r_and_l_with_yat(new_text)
     return new_text
+
 
 def unify(text):
     """Принимает слово на древнерусской языке и переводит его в унифицированный вид.
@@ -376,8 +391,9 @@ def unify(text):
     new_text = ie(new_text)
     return new_text
 
+
 def all_options(word):
-    """Данная функция возвращает все возможные способы написания.
+    """Данная функция возвращает все возможные способы написания касательно редуцированных.
     
     1. Редуцированные упали/прояснились.
     2. Редуцированные добавились по принципу открытого слога.
@@ -398,3 +414,28 @@ def all_options(word):
     
     return tuple(map(add_shwas, (word_without_shwas, word_with_open_shwa_vowels, word_with_dropped_open_shwa_vowels)))
 
+
+def compare(word1, word2):
+    """Данная функция сравнивает два слова тремя способами.
+    
+    1. Редуцированные упали/прояснились.
+    2. Редуцированные добавились по принципу открытого слога.
+    4. Редуцированные добавились, после чего упали/прояснились.
+    """
+    cdef unicode pre_unified1 = pre_unify(word1)
+    cdef unicode pre_unified2 = pre_unify(word2)
+    
+    cdef unicode word1_without_shwas = drop_shwas(pre_unified1)
+    cdef unicode word2_without_shwas = drop_shwas(pre_unified2)
+    if word1_without_shwas == word2_without_shwas:
+        return add_shwas(word1_without_shwas)
+    
+    cdef unicode word1_with_open_shwa_vowels = add_shwas(pre_unified1)
+    cdef unicode word2_with_open_shwa_vowels = add_shwas(pre_unified2)
+    if word1_with_open_shwa_vowels == word2_with_open_shwa_vowels:
+        return word1_with_open_shwa_vowels
+    
+    cdef unicode word1_with_dropped_open_shwa_vowels = drop_shwas(word1_with_open_shwa_vowels)
+    cdef unicode word2_with_dropped_open_shwa_vowels = drop_shwas(word2_with_open_shwa_vowels)
+    if word1_with_dropped_open_shwa_vowels == word2_with_dropped_open_shwa_vowels:
+        return word1_with_dropped_open_shwa_vowels

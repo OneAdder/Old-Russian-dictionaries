@@ -32,13 +32,14 @@ def match_(avanesov):
     cdef long int x = 0
     cdef long int i = 0
     cdef long int j = 0
-    cdef short y = 0
+    cdef short y = 20
     
     cdef short dumm
     
     cdef list new_x11 = []
     cdef list new_x11_index = []
     
+    print('Preparing data...\r', end='')
     while x < x11_len:
         if isinstance(x11[x], str):
             unified.append(all_options(x11[x]))
@@ -61,6 +62,9 @@ def match_(avanesov):
             
         x += 1
     
+    print('Finished, starting matching.\r', end='')
+    print('                            \r', end='')
+    
     cdef long int new_x11_len = len(new_x11)
     
     while i < avanesov_len:
@@ -71,10 +75,10 @@ def match_(avanesov):
             unified_x11 = unified[j]
             if avanesov_lemma in unified[j] or avanesov_lemma in unified_index[j]:
                 ready = 100 - (((pool_length - i) * 100)/pool_length)
-                if y < 100:
+                if y < 50:
                     y += 1
                 else:
-                    print(str(number) + ': %.2f' % ready + '%')
+                    print(str(number) + ': %.2f' % ready + '%\r', end='')
                     y = 0
                 #print(avanesov_lemma)
                 avanesov[avanesov_lemma]['XVII_lemma'] = x11_lemma

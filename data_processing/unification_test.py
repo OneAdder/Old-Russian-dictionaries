@@ -5,6 +5,7 @@ from multiprocessing import cpu_count
 import pyximport; pyximport.install()
 from unification import *
 
+'''
 def mean_test():
     import unification_old
     new = []
@@ -39,4 +40,4 @@ def mean_test():
 
 #mean_test()
 #short_test()
-
+'''

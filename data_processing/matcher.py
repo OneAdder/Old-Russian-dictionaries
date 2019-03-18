@@ -100,10 +100,6 @@ avanesovs = split_dict(avanesov, CPU_CORES)
 
 match_ = match_cython.match_
 
-lengt = len(avanesov)
-print('Total:')
-print(lengt)
-
 pool = Pool(processes=CPU_CORES)
 matches = pool.map(match_, avanesovs)
 matched = {}
