@@ -124,7 +124,7 @@ def unify_i_and_front_shwa(text):
         text = ''.join(text)
     return text
 
-def unify_r_and_l_with_vowels(text):
+def unify_r_and_l_with_shwas1(text):
     """Превращаются сочетания:
     'согласный + р/л + ь/ъ + согласный' в 'согласный + є/о + р/л + согласный'
     'согласный + ь/ъ + р/л + согласный' в 'согласный + є/о + р/л + согласный'
@@ -142,6 +142,9 @@ def unify_r_and_l_with_vowels(text):
             text[key + 1] = 'о'
         text[key + 2] = r
         text = ''.join(text)
+    return text
+
+def unify_r_and_l_with_shwas2(text):
     matches = re.findall('([' + set4 + '][ьъ][рл][' + set4 + '])', text)
     for match in matches:
         key = text.find(match)
@@ -154,6 +157,9 @@ def unify_r_and_l_with_vowels(text):
             text[key + 1] = 'о'
         text[key + 2] = r
         text = ''.join(text)
+    return text
+
+def unify_r_and_l_with_yat(text):
     matches = re.findall('([' + set4 + '][рл]ѣ[' + set4 + '])', text)
     for match in matches:
         key = text.find(match)
@@ -161,6 +167,8 @@ def unify_r_and_l_with_vowels(text):
         text[key + 2] = 'є'
         text = ''.join(text)
     return text
+
+
 
 def drop_shwas(text):
     """Положить редуцированные."""
@@ -200,29 +208,107 @@ def add_shwas(text):
                 new_text += sym
     return new_text
         
+def replace_shwas(text):
+    """Меняет редуцированные на є/о"""
+    new_text = ''
+    i = 0
+    l = len(text)
+    while i < l:
+        if text[i] == 'ь':
+            new_text += 'є'
+        elif text[i] == 'ъ':
+            new_text += 'о'
+        else:
+            new_text += text[i]
+        i += 1
 
-#print(drop_shwas('пъпъпыпьпъпъпъпьпьпапъ'))
+def pre_unify(text):
+    """Унифицирует всё, кроме редуцированных."""
+    if not text:
+        return ''
+    new_text = ''
+    new_text = strip_stuff(text)
+    new_text = unify_various_symbols(new_text)
+    new_text = unify_final_shwa(new_text)
+    new_text = unify_vowels_after_set1(new_text)
+    new_text = unify_iotated(new_text)
+    new_text = unify_i_and_front_shwa(new_text)
+    new_text = unify_r_and_l_with_shwas1(new_text)
+    new_text = unify_r_and_l_with_shwas2(new_text)
+    new_text = unify_r_and_l_with_yat(new_text)
+    return new_text
 
 def unify(text):
-    text = strip_stuff(text)
-    text = unify_various_symbols(text)
-    text = unify_final_shwa(text)
-    text = unify_vowels_after_set1(text)
-    text = unify_iotated(text)
-    text = unify_i_and_front_shwa(text)
-    text = unify_r_and_l_with_vowels(text)
-    text = drop_shwas(text)
-    text = add_shwas(text)
-    return text
+    """Принимает слово на древнерусской языке и переводит его в унифицированный вид.
+    
+    Алгоритм сделан на основе статей:
+    "Автоматический морфологический анализатор древнерусского языка: лингвистические и технологические решения". Баранов, Миронов, Лапин, Мельникова, Соколова, Корепанова.
+    "ВЗIAЛЪ, ВЪЗЯЛЪ, ВЬЗЯЛ: ОБРАБОТКА ОРФОГРАФИЧЕСКОЙ ВАРИАТИВНОСТИ ПРИ ЛЕКСИКО-ГРАММАТИЧЕСКОЙ АННОТАЦИИ СТАРОРУССКОГО КОРПУСА XV–XVII ВВ.*". Т. С. Г АВРИЛОВА, Т. А. ШАЛГАНОВА, О. Н. ЛЯШЕВСКАЯ.
 
-def test():
-    words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ', 'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь')
-    for word in words:
-        print(unify(word))
-#test()
-def test():
+    Алгоритм унификации:
+    1) Привести к нижнему регистру, удалить лишние знаки и т.д.
+    2) Привести равнозначные знаки и фонологически незначимые отличия к единой форме. Подробнее см. unify_various_symbols
+    3) Привести конечный редуцированный в "ъ".
+    4) Уменьшить разнообразие гласные после после шипящих. Подробнее см. unify_vowels_after_set1
+    5) Дезйотировать гласные в позиции начала слова и после гласных. Подробнее см. unify_iotated
+    6) Перевести "ь" после йотированных гласных и "i" в "и".
+    7) Преобразовать ряд сочетаний плавных с гласными. Подробнее см. unify_r_and_l_with_shwas1, unify_r_and_l_with_shwas2 и unify_r_and_l_with_yat
+    8) Эмулировать падение редуцированных.
+    9) Добавить принцип открытого слога.
+    """
+    if not text:
+        return ''
+    new_text = ''
+    new_text = pre_unify(text)
+    new_text = add_shwas(new_text)
+    return new_text
+
+def compare(word1, word2):
+    """Данная функция сравнивает два слова тремя способами.
+    
+    1. Редуцированные упали/прояснились.
+    2. Редуцированные добавились по принципу открытого слога.
+    3. Редуцированные прояснились в є/о.
+    4. Редуцированные добавились, после чего упали/прояснились.
+    5. Редуцированные добавились, после чего прояснились в є/о.
+    """
+    pre_unified1 = pre_unify(word1)
+    pre_unified2 = pre_unify(word2)
+    
+    word1_without_shwas = drop_shwas(pre_unified1)
+    word2_without_shwas = drop_shwas(pre_unified2)
+    if word1_without_shwas == word2_without_shwas:
+        return add_shwas(word1_without_shwas)
+    
+    word1_with_open_shwa_vowels = add_shwas(pre_unified1)
+    word2_with_open_shwa_vowels = add_shwas(pre_unified2)
+    if word1_with_open_shwa_vowels == word2_with_open_shwa_vowels:
+        return word1_with_open_shwa_vowels
+    
+    word1_replaced_shwas = replace_shwas(pre_unified1)
+    word2_replaced_shwas = replace_shwas(pre_unified2)
+    if word1_replaced_shwas == word2_replaced_shwas:
+        return word1_replaced_shwas
+    
+    word1_with_dropped_open_shwa_vowels = drop_shwas(word1_with_open_shwa_vowels)
+    word2_with_dropped_open_shwa_vowels = drop_shwas(word2_with_open_shwa_vowels)
+    if word1_with_dropped_open_shwa_vowels == word2_with_dropped_open_shwa_vowels:
+        return word1_with_dropped_open_shwa_vowels
+    
+    word1_added_replaced = replace_shwas(word1_with_open_shwa_vowels)
+    word2_added_replaced = replace_shwas(word2_with_open_shwa_vowels)
+    if word1_added_replaced == word2_added_replaced:
+        return word1_added_replaced
+
+    
+
+def test1():
     words = ('врачение', 'ВРАЧЕНИ|Ѥ', 'напрѣждьспѣяние', 'ПОВѢЧ|Ь', 'пакы', 'ждѭ', 'дож', 'аѩдовитыйаꙓ',
              'прьивьiа', 'пьрцтълнлѣт', 'пьрцьси', 'всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь', 'приь', 'прюьп', 'жю',
              'жюк', 'властелин', 'привет привет', 'пъпъпыпьпъпъпъпьпьпапъ', 'ка', 'к', 'трѢт', 'адвлѢвап')
-    for word in words:
-        return unify(word) 
+    return map(unify, words)
+
+def test2():
+    word_pairs = (('врачение', 'ВРАЧЕНИ|Ѥ'), ('всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь'), ('молъчание', 'мълчание'), ('молъчание', 'мълъчание'), ('молъчание', 'молчание'), ('мълчание', 'мълъчание'),
+                  ('врачение', 'ВРАЧЕНИ|Ѥ'), ('всєдрьжитєлъ', 'ВЬСЕДЬРЖИТЕЛ|Ь'), ('молъчание', 'мълчание'), ('молъчание', 'мълъчание'), ('молъчание', 'молчание'), ('мълчание', 'мълъчание'))
+    return (compare(*word_pair) for word_pair in word_pairs)

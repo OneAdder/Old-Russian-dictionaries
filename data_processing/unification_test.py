@@ -2,8 +2,6 @@ import time
 from statistics import mean
 from multiprocessing import cpu_count
 
-import unification_old
-
 import pyximport; pyximport.install()
 import unification
 
@@ -13,19 +11,22 @@ def short_test():
         print(el)
 
 def mean_test():
+    import unification_old
     new = []
     old = []
     i = 0
     while i < 100:
         t = time.process_time()
-        unification.test()
+        s1 = tuple(unification.test1())
+        s2 = tuple(unification.test2())
         t2 = time.process_time() - t
         new.append(t2)
         i += 1
     i = 0
     while i < 100:
         t = time.process_time()
-        unification_old.test()
+        s1 = tuple(unification_old.test1())
+        s2 = tuple(unification_old.test2())
         t2 = time.process_time() - t
         old.append(t2)
         i += 1
@@ -42,4 +43,5 @@ def mean_test():
     print('Estimated long loop time: %.2f s = %.2f m = %.2f h' % (est, est / 60, est / 3600))
 
 mean_test()
+#short_test()
 

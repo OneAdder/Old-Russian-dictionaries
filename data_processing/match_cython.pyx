@@ -6,8 +6,7 @@ __license__ = "GPLv3"
 import os
 import pandas
 import re
-from math import isnan
-from unification import unify
+from unification import compare
 
 shit = []
 
@@ -40,11 +39,11 @@ def match_(avanesov):
         while j < x11_len:
             try:
                 x11_lemma = x11[j]
-                x11_unified = unify(x11_lemma)
-                if x11_unified == avanesov_lemma:
+                unified = compare(x11_lemma, avanesov_lemma)
+                if unified:
                     ready = 100 - (((pool_length - i) * 100)/pool_length)
                     print(str(number) + ': %.2f' % ready + '%')
-                    print(x11_unified)
+                    print(unified)
                     avanesov[avanesov_lemma]['XVII_lemma'] = x11_lemma
             except TypeError:
                 dumm = 0
