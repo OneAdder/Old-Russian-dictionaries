@@ -277,9 +277,8 @@ form input{
 
 form input, button{
   border: none;
-
   padding: 15px 20px;
-  font-size: 14px;
+  font-size: inherit;
   margin: -2px;
 }
 
