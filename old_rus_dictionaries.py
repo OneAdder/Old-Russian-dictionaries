@@ -1,12 +1,9 @@
 from flask import Flask, render_template, url_for, redirect, request
 import json
+import sys
 import pyximport; pyximport.install()
-try:
-    from data_processing.unification import unify
-except AttributeError:
-    import sys
-    sys.path.insert(0, './data_processing')
-    from unification import unify
+sys.path.insert(0, './data_processing')
+from unification import unify
 __author__ = "Michael Voronov, Anna Sorokina"
 __license__ = "GPLv3"
 
