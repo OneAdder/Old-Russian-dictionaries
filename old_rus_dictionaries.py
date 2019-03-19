@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, send_from_directory
 import json
 import sys
 import pyximport; pyximport.install()
@@ -10,11 +10,17 @@ __license__ = "GPLv3"
 with open('data_processing/matched.json', 'r', encoding='utf-8') as f:
     js = json.loads(f.read())
 
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     return redirect(url_for('search'))
+
+@app.route('/src/xi-xvii/pdf/Vol01ab/<pdf_name>')
+def load_pdf(pdf_name):
+    return send_from_directory('src/xi-xvii/pdf/Vol01ab', pdf_name)
+    
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
