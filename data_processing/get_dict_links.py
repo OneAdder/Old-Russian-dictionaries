@@ -28,7 +28,9 @@ def getlinks(relpath):
                     linkdict.update({lemmata[i]: loclinks[i]})
             except IndexError:
                 continue # для некоторых слов нет ссылок на пдф
-            
+
+    del linkdict['']
+    del linkdict[' ']
     # проверка двойных ссылок
     # print(linkdict['амбарное (онбарное)'])
     return linkdict
@@ -40,8 +42,8 @@ def onlinedict2lemma(linkdict, wl):
         wl_file = csv.reader(wl, delimiter=',')
         
         for row in wl_file:
-            if row[3] == 'LemmaIndex': 
-                continue
+            if row[3] == 'LemmaIndex': continue
+            elif row[2] == '' or row[2]==' ': continue
             else:
                 try:
                     lemma = row[3]
@@ -49,8 +51,8 @@ def onlinedict2lemma(linkdict, wl):
                     linkdict2.update({lemma : link})
                 except KeyError:
                     continue
+                    #print(linkdict2['основание (-ье)'])
     return linkdict2
-    #print(linkdict2['основание (-ье)'])
 
 """вставляет в json-файл со словарем ссылки на pdf страницы словаря 11-17"""
 def insert_links(ld, js):
@@ -58,12 +60,17 @@ def insert_links(ld, js):
         matched = matched.read()
         data = json.loads(matched)
         for key in data.keys():
+            try:
+                del data[key]["XVII_link"]
+            except KeyError:
+                continue
             if "XVII_lemma" in data[key]:
                 try:
                     link = ld[data[key]["XVII_lemma"]]
                     data[key].update({'XVII_link': link})
                 except KeyError:
                     continue
+                
     with open(js, 'w',encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
