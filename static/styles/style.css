@@ -221,14 +221,32 @@ h2{
 
 .ex{
   padding: 20px 30px;
-  margin: 0 0 5px 0;ы
+  margin: 0 0 5px 0;
 }
 
-.ex-body{}
+.ex-body{
+  margin-top: 2px;
+  margin-bottom: 2px;
+  line-height: 1.58;	
+}
+
 .ex-source{
   color: gray;
   font-style: italic;
   font-size: 0.9em;
+}
+
+.description-block{
+  padding: 0px 50px 30px;
+  min-height: 7rem;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.err{
+  padding: 6px 50px 30px;
+  min-height: 6rem;
+  text-align: center;
 }
 
 form input{
