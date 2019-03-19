@@ -4,12 +4,14 @@ body{
   margin: auto;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14.6px;
+  line-height: 1.58;
 }
 
 h2{
-  height: 1.1em;
+  height: 1.3em;
   padding: 20px 40px;
   text-align: center;
+  color: #0D0F0E
 }
 
 .tab-body{
@@ -19,33 +21,34 @@ h2{
 .tablinks{
   border: none;
   /*width: 17rem;*/
-  color: white;
-  background: rgba(6, 0, 26, 0.5, 0.4) ;
+  color: black;
+  background: #F1F4F8;
   outline: none;
   cursor: pointer;
    padding: 14px 35.4px;
    font-size: 1em;
    margin-bottom: 0px;
+   border-radius: 6px 6px 0px 0px;
 }
 
 .tablinks:first-child{
-  border-top-left-radius: 6px;
+  //border-top-left-radius: 6px;
 }
 
 .tablinks:nth-child(3){
-  border-top-right-radius: 6px;
+  //border-top-right-radius: 6px;
 }
 
 .tablinks:first-child:hover{
-  background: rgba(6, 0, 26, 0.3) ;
+  background: rgba(3, 36, 82, 0.6) ;
 }
 
 .tablinks:nth-child(2):hover{
-  background:  rgba(51, 153, 51, 0.3);
+  background:  rgba(67, 61, 101, 0.6);
 }
 
 .tablinks:nth-child(3):hover{
-  background: rgba(255, 102, 0, 0.3) ;
+  background: rgba(23, 113, 93, 0.6);
 }
 
 .tabcontent {
@@ -85,16 +88,17 @@ h2{
 }*/
 
 #Home{
-  background: #00001a;
+  background: #032452;
   padding: 40px 0px 0px;
   }
 
 #Dict17{
-  background: orange;
+  background: #17715D;
 }
 
 #Dict14{
-  background: green;
+  background: #433D65;
+  //background: #B6AFFF;
 }
 
 .dict-info{
@@ -127,7 +131,8 @@ h2{
 }
 
 .search-field{
-  background: #00001a;
+  background: #032452;
+  //background: #0B2849;
   min-height: 4em;
   margin-bottom: 14px;
 }
@@ -135,7 +140,7 @@ h2{
 .entry-body{
   width: 100%;
   margin: auto;
-  background: lightgrey;
+  background: #F1F4F8;
   padding-top: 26px;
   padding-bottom: 16px;
   min-height: 20rem;
@@ -171,7 +176,7 @@ h2{
   text-align: left;
   }
 
-.word-info{
+.word-info, .descr-info{
   margin: 0px;
   padding: 15px 30px;
 }
@@ -185,7 +190,7 @@ h2{
   color: rgba(0,0,0,0.7);
   font-style: italic;
   font-size: 0.9em;
-  background-color: #ffff99
+  background-color: #FFFF64
 }
 
 .gram{
@@ -193,7 +198,7 @@ h2{
   /*  float: right;*/  
   font-style: italic;
   color: rgba(0,0,0,0.7);
-  background-color: #ffff99
+  background-color: #FFFF64
 }
 
 .sense-body{
@@ -248,11 +253,11 @@ form input, button{
 }
 
 form .btn-info{
-  background-color: #AED6F1;
+  background-color: #A2C5F5;
 }
 
 .btn-info:hover{
-  background-color:  #A9CCE3;
+  background-color:  #5E8FD7;
 }
 
 #word{
@@ -265,6 +270,8 @@ footer{
   background-color:  #0D0F0E;
   text-align: right;
 }
+
+
 
 @media screen and (max-width: 850px){
   .tablinks{
@@ -279,4 +286,25 @@ footer{
   .entry-body{
     padding-top: 0px;
   }
+}
+
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-radius: 48%;
+  border-top: 5px solid #333C49;
+  width: 40px;
+  height: 40px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

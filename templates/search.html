@@ -9,9 +9,9 @@
 <body>
     <h2>Сводный словарь русской лексики от XI до XVII века</h2>
     <div class=tab-body>
-        <button class="tablinks" onclick="openPage('Home', this, '#00001a')" id="defaultOpen">Поиск</button>
-        <button class="tablinks" onclick="openPage('Dict14', this, 'green')">Словарь древнерусского языка XI–XIV веков</button>
-        <button class="tablinks" onclick="openPage('Dict17', this, 'orange')">Словарь русского языка XI–XVII веков</button>
+        <button class="tablinks" onclick="openPage('Home', this, '#032452')" id="defaultOpen">Поиск</button>
+        <button class="tablinks" onclick="openPage('Dict14', this, '#433D65')">Словарь древнерусского языка XI–XIV веков</button>
+        <button class="tablinks" onclick="openPage('Dict17', this, '#17715D')">Словарь русского языка XI–XVII веков</button>
         <!-- Вкладка со страницей для поиска -->
         <div id="Home" class="tabcontent">
             <div class="search-field">
@@ -28,7 +28,7 @@
             <div class="entry-body">
                 {% if res["avanesov_lemma"] %} 
                 <div class="dict-result">
-                    <p class="dict-title">Russian dictionary of 11th-14th centuries</p>
+                    <p class="dict-title">Словарь древнерусского языка XI–XIV веков</p>
                     <div class="sense-block">
                         <h4 class="word-info">
                             <span class="headword">{{ res["avanesov_lemma"]|lower }} </span><br>
@@ -56,16 +56,41 @@
                 {% endif %}
                 {% if res["XVII_lemma"] %} 
                 <div class="dict-result">
-                    <p class="dict-title">Dictionary of 11th-17th centuries</p>
+                    <p class="dict-title">Словарь русского языка XI–XVII веков</p>
                     <div class="sense-block">
                     <h4 class="word-info"><span class="headword">{{ res["XVII_lemma"]|lower }}</span></h4>
+                    <div class="sense-body">
+						<div class="def">Описание <a href="https://github.com/OneAdder/Old-Russian-dictionaries/blob/master{{ res['XVII_link'] }}" style="color: #1C4173">в словаре</a></div>
+					</div>
                     </div>
                 </div>
                 {% endif %}
             </div>
             {% elif comment %}
             <div class="entry-body">
-                <div class="dict-result"><p>{{ comment }}</p></div>
+                <div class="dict-result">
+					<div class="sense-block">
+						<div class="sense-body"><p>{{ comment }}</p></div>
+					</div>
+				</div>
+            </div>
+            {% else %}
+            <div class="entry-body">
+                <div class="dict-result">
+					<h4 class="dict-info-title">Сводный словарь русской лексики</h4>
+					<div class="sense-block">
+							<div class="sense-body">
+								<div class = "def">
+								<li>Словарь русского языка 11-17 вв., cловарь древнерусского языка 11-14 вв.</li>
+								<li>Задачи: реализовать алгоритмы мэтчинга заголовочных форм; создать работающую веб-страницу с поиском по нескольким словарям.</li>
+								<li>Михаил Воронов - разработал алгоритмы мэтчинга и оптимизировал их.</li>
+								<li>Анна Сорокина - организовала поиск по словарям и отвечала за веб-дизайн.</li>
+								</div>
+							</div>
+						</div>
+						<div class="sense-body"><p>{{ comment }}</p></div>
+					</div>
+				</div>
             </div>
             {% endif %}
         </div>
@@ -85,10 +110,10 @@
         </div>
     </div>
     <footer>
-    <p><a href='https://github.com/OneAdder/Old-Russian-dictionaries' style="text-decoration: none; color: #FFF; font-wieght: bold">Github</a></p>
+    <p><a href='https://github.com/OneAdder/Old-Russian-dictionaries' style="text-decoration: none; color: #FFF; font-weight: bold">Github</a></p>
     </footer>
 <script>
-function openPage(pageName,elmnt,color) {
+function openPage(pageName, elmnt, color) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -104,6 +129,8 @@ function openPage(pageName,elmnt,color) {
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
+
+
 </script>
 </body>
 </html>
