@@ -9,9 +9,9 @@
 <body>
     <h2>Сводный словарь русской лексики от XI до XVII века</h2>
     <div class=tab-body>
-        <button class="tablinks" onclick="openPage('Home', this, '#032452')" id="defaultOpen">Поиск</button>
-        <button class="tablinks" onclick="openPage('Dict14', this, '#433D65')">Словарь древнерусского языка XI–XIV веков</button>
-        <button class="tablinks" onclick="openPage('Dict17', this, '#17715D')">Словарь русского языка XI–XVII веков</button>
+        <button class="tablinks" onclick="openPage(event, 'Home')" id="defaultOpen">Поиск</button>
+        <button class="tablinks" onclick="openPage(event, 'Dict14')">Словарь древнерусского языка XI–XIV веков</button>
+        <button class="tablinks" onclick="openPage(event,'Dict17')">Словарь русского языка XI–XVII веков</button>
         <!-- Вкладка со страницей для поиска -->
         <div id="Home" class="tabcontent">
             <div class="search-field">
@@ -109,7 +109,7 @@
     <p><a href='https://github.com/OneAdder/Old-Russian-dictionaries' style="text-decoration: none; color: #FFF; font-weight: bold">Github</a></p>
     </footer>
 <script>
-function openPage(pageName, elmnt, color) {
+function openPage(evt, pageName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -117,16 +117,14 @@ function openPage(pageName, elmnt, color) {
   }
   tablinks = document.getElementsByClassName("tablinks");
   for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].style.backgroundColor = "";
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
   document.getElementById(pageName).style.display = "block";
-  elmnt.style.backgroundColor = color;
+  evt.currentTarget.className += " active";
 }
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
-
-
 </script>
 </body>
 </html>
