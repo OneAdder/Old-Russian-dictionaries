@@ -24,22 +24,22 @@
      {
         "avanesov_lemma": XI-XIV_лемма (str),
         "avanesov_data": {
-        "gramGrp": граматический_клас (str),
-        "definition": определение (str),
-        "usg": использование (str),
-        "inflected": изменяемый/неизменяемый (bool),
-        "examples": 
-        [
-            {
-                "example": пример (str),
-                "src": источник (str)
-            },
-            ...
-        ],
-        "inflection": {формы (dict)}
+            "gramGrp": граматический_клас (str),
+            "definition": определение (str),
+            "usg": использование (str),
+            "inflected": изменяемый/неизменяемый (bool),
+            "examples": 
+            [
+                {
+                    "example": пример (str),
+                    "src": источник (str)
+                },
+                ...
+            ],
+            "inflection": {формы (dict)}
         },
-        "XVII_lemma": XI-XVII_лемма,
-        "XVII_lemma_index": ещё_одна_лемма_из_того_же_словаря
+        "XVII_lemma": XI-XVII_лемма (str),
+        "XVII_lemma_index": ещё_одна_лемма_из_того_же_словаря (str)
     },
    ...
 }
