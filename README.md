@@ -39,7 +39,8 @@
             "inflection": {формы (dict)}
         },
         "XVII_lemma": XI-XVII_лемма (str),
-        "XVII_lemma_index": ещё_одна_лемма_из_того_же_словаря (str)
+        "XVII_lemma_index": ещё_одна_лемма_из_того_же_словаря (str),
+        "XVII_link": ссылка_на_пдф (str)
     },
    ...
 }
