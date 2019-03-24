@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, url_for, redirect, request
 from flask_pymongo import PyMongo
 
+=======
+from flask import Flask, render_template, url_for, redirect, request, send_from_directory
+>>>>>>> 66cddb83fd5b95ee5ce6837e3c83680d90e9a929
 import json
 import sys
 import pyximport; pyximport.install()
@@ -12,6 +16,7 @@ __license__ = "GPLv3"
 with open('data_processing/matched.json', 'r', encoding='utf-8') as f:
     js = json.loads(f.read())
 
+
 app = Flask(__name__)
 
 mongo = PyMongo(app, uri="mongodb://localhost:33017/old_russian")
@@ -19,6 +24,11 @@ mongo = PyMongo(app, uri="mongodb://localhost:33017/old_russian")
 @app.route('/')
 def index():
     return redirect(url_for('search'))
+
+@app.route('/src/xi-xvii/pdf/Vol01ab/<pdf_name>')
+def load_pdf(pdf_name):
+    return send_from_directory('src/xi-xvii/pdf/Vol01ab', pdf_name)
+    
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
