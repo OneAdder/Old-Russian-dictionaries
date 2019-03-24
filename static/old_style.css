@@ -1,0 +1,64 @@
+body{
+	width: 60%; 
+	margin: auto;
+	}
+
+.query-line{}
+.entry-body{}
+.dict-results{}
+.dict-title{}
+.sense-block{}
+.word-info{
+	background: #234b9a;
+	border-radius: 3px;
+	color: #fff;
+	margin-bottom: 0px;
+	padding: 20px;
+	}
+
+.headword{
+	font-weight: 700;
+    font-size: 1.1em;
+    }
+    
+.pos{
+	color: rgba(255,255,255,0.8);
+	font-style: italic;
+	font-size: 0.9em;
+	}
+
+.gram{
+	font-size: 0.9em;
+	/*	float: right;*/  
+	font-style: italic;
+	color: rgba(255,255,255,0.8);
+	}
+
+.sense-body{
+	margin-bottom: 20px;
+	border: 2px solid #234b9a; 
+	}
+	
+.def{
+	border-bottom: 2px dotted #234b9a; 
+	padding: 20px 30px;
+	}
+	
+.ex{
+	padding: 20px 30px;
+	margin: 0 0 5px 0;
+	}
+	
+.ex-body{}
+.ex-source{
+	color: gray;
+	font-style: italic;
+	font-size: 0.9em;
+}
+
+form{
+  margin-top: 3em;
+  padding: 20px 34px; 
+  background-color: #d8e6f3;
+  border: 1px solid #e3e3e3;
+} 

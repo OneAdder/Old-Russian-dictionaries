@@ -122,7 +122,7 @@ def convert_tei_to_another_json(entries):
                 inflection_xml = form.find_all('inflection')
                 inflection = {}
                 for inflec in inflection_xml:
-                    inflection[inflec.lbl.text] = inflec.orth.text
+                    inflection[inflec.lbl.text.replace('.', '_')] = inflec.orth.text
             else:
                 inflected = False
         except KeyError:

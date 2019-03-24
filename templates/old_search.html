@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<title></title>
+    <link rel="stylesheet" type="text/css" href="../static/old_style.css" >
+</head>
+<body>
+	<h2>Search</h2>
+	{% if comment %}
+        {{ comment }}
+	{% endif %}
+    <form method="post">
+        <input type="text" name="word" placeholder="Type the word"><br>
+        <input name="seventeen" type="checkbox">Search in 11-17 dictionary<br>
+        <input name="fourteen" type="checkbox">Search in 11-14 dictionary<br>
+        <input name="verbs" type="checkbox">Verbs only<br><br>
+        <input name="nouns" type="checkbox">Nouns only<br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html> 
