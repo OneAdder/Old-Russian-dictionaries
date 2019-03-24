@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, send_from_directory
 from flask_pymongo import PyMongo
 
-=======
-from flask import Flask, render_template, url_for, redirect, request, send_from_directory
->>>>>>> 66cddb83fd5b95ee5ce6837e3c83680d90e9a929
 import json
 import sys
 import pyximport; pyximport.install()
