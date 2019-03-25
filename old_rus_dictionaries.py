@@ -48,30 +48,30 @@ def mongo_search():
             result = mongo.db.or_dictionaries.find_one({
                 '$and': [
                     {'unified_lemma': query},
-                    {'XVII_lemma': {'$exists': True}}
+                    {'avanesov_lemma': {'$exists': True}}
                 ]
             })
         elif 'seventeen' in request.form:
             result = mongo.db.or_dictionaries.find_one({
                 '$and': [
                     {'unified_lemma': query},
-                    {'avanesov_lemma': {'$exists': True}}
+                    {'XVII_lemma': {'$exists': True}}
                 ]
             })
         elif 'verbs' in request.form:
-            result = list(
-                mongo.db.or_dictionaries.aggregate([
+            result = list(mongo.db.or_dictionaries.aggregate([
                     {'$match': {'avanesov_data.gramGrp': 'гл'}},
                     {'$match': {'unified_lemma': query}}
-                ])
-            )
-        elif 'nouns' in request.args:
-            result = list(
-                mongo.db.or_dictionaries.aggregate([
+                ]))
+            if result:
+                result = result[0]
+        elif 'nouns' in request.form:
+            result = list(mongo.db.or_dictionaries.aggregate([
                     {'$match': {'avanesov_data.gramGrp': 'с'}},
                     {'$match': {'unified_lemma': query}}
-                ])
-            )
+                ]))
+            if result:
+                result = result[0]
         else:
             result = mongo.db.or_dictionaries.find_one({'unified_lemma': query})
         if result:
