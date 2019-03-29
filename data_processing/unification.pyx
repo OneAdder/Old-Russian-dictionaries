@@ -77,7 +77,8 @@ def unify_various_symbols(text):
         'ꚛ': 'о',
         'ꙮ': 'о',
         'ѽ': 'о',
-        '҃': ''
+        '҃': '',
+        'й': 'и'
     }
     cdef unicode new_text = ''
     cdef int i = 0
