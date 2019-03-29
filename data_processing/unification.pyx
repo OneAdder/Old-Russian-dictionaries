@@ -77,7 +77,8 @@ def unify_various_symbols(text):
         'ꚛ': 'о',
         'ꙮ': 'о',
         'ѽ': 'о',
-        '҃': ''
+        '҃': '',
+        'й': 'и'
     }
     cdef unicode new_text = ''
     cdef int i = 0
@@ -269,11 +270,22 @@ def unify_r_and_l_with_yat(text):
 
 
 def ie(text):
-    """Заменяет ье на ие в конце слова"""
+    """Заменяет ье на ие"""
     cdef unicode new_text = ''
     new_text = text.replace('ьє', 'иє')
     return new_text
 
+
+def replace_final_vowels_in_adj(text):
+    cdef unicode new_text = ''
+    if len(text) > 2:
+        if text[-3] in 'кгх' and text[-2] == 'ꙑ' and text[-1] == 'и':
+            new_text = text[:-2] + 'ии'
+        else:
+            new_text = text
+    else:
+        new_text = text
+    return new_text
 
 def drop_shwas(text):
     """Положить редуцированные."""
@@ -358,6 +370,7 @@ def pre_unify(text):
     new_text = unify_vowels_after_set1(new_text)
     new_text = unify_iotated(new_text)
     new_text = unify_i_and_front_shwa(new_text)
+    new_text = replace_final_vowels_in_adj(new_text)
     new_text = unify_r_and_l_with_shwas1(new_text)
     new_text = unify_r_and_l_with_shwas2(new_text)
     new_text = unify_r_and_l_with_yat(new_text)
@@ -379,6 +392,7 @@ def unify(text):
     5) Дезйотировать гласные в позиции начала слова и после гласных. Подробнее см. unify_iotated
     6) Перевести "ь" после йотированных гласных и "i" в "и".
     7) Преобразовать ряд сочетаний плавных с гласными. Подробнее см. unify_r_and_l_with_shwas1, unify_r_and_l_with_shwas2 и unify_r_and_l_with_yat
+    8) Сровнять типа вꙑсокꙑи и вꙑсокии во второй вариант.
     8) Эмулировать падение редуцированных.
     9) Добавить принцип открытого слога.
     """
