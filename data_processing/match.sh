@@ -4,4 +4,5 @@ echo 'Ready. The longest part is starting. Make some tea. This is gonna take som
 python3 matcher.py
 echo 'The longest part is over.'
 python3 finish_match.py
+python3 get_dict_links.py
 echo 'Success!'

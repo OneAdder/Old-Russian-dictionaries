@@ -57,20 +57,22 @@ def onlinedict2lemma(linkdict, wl):
 """вставляет в json-файл со словарем ссылки на pdf страницы словаря 11-17"""
 def insert_links(ld, js):
     with open(js, 'r', encoding='utf-8') as matched:
-        matched = matched.read()
-        data = json.loads(matched)
-        for key in data.keys():
+        data = json.load(matched)
+        
+    for key in data:
+        '''
+        try:
+            del data[key]["XVII_link"]
+        except KeyError:
+            continue
+        '''
+        #print(data[key])
+        if "XVII_lemma" in data[key]:
             try:
-                del data[key]["XVII_link"]
+                link = ld[data[key]["XVII_lemma"]]
+                data[key].update({'XVII_link': link})
             except KeyError:
                 continue
-            if "XVII_lemma" in data[key]:
-                try:
-                    link = ld[data[key]["XVII_lemma"]]
-                    data[key].update({'XVII_link': link})
-                except KeyError:
-                    continue
-                
     with open(js, 'w',encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
